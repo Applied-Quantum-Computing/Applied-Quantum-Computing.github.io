@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Quantum Unsupervised Learning with Max-cut | Applied Quantum Computation</title>
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="Quantum Unsupervised Learning with Max-cut" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Unsupervised Learning with Max-cut This notebook is an example of unsupervised learning on a quantum computer. The data used are from the iris data set." />
+<meta property="og:description" content="Unsupervised Learning with Max-cut This notebook is an example of unsupervised learning on a quantum computer. The data used are from the iris data set." />
+<link rel="canonical" href="http://localhost:4000/unsupervised-machine-learning/max-cut/2019/11/07/Quantum-Max-cut-vs-K-means.html" />
+<meta property="og:url" content="http://localhost:4000/unsupervised-machine-learning/max-cut/2019/11/07/Quantum-Max-cut-vs-K-means.html" />
+<meta property="og:site_name" content="Applied Quantum Computation" />
+<meta property="og:image" content="http://localhost:4000/assets/images/output_17_0.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-11-07T10:05:38-05:00" />
+<script type="application/ld+json">
+{"description":"Unsupervised Learning with Max-cut This notebook is an example of unsupervised learning on a quantum computer. The data used are from the iris data set.","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/unsupervised-machine-learning/max-cut/2019/11/07/Quantum-Max-cut-vs-K-means.html"},"image":"http://localhost:4000/assets/images/output_17_0.png","headline":"Quantum Unsupervised Learning with Max-cut","dateModified":"2019-11-07T10:05:38-05:00","url":"http://localhost:4000/unsupervised-machine-learning/max-cut/2019/11/07/Quantum-Max-cut-vs-K-means.html","datePublished":"2019-11-07T10:05:38-05:00","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Applied Quantum Computation" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Applied Quantum Computation</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Quantum Unsupervised Learning with Max-cut</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2019-11-07T10:05:38-05:00" itemprop="datePublished">Nov 7, 2019
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="unsupervised-learning-with-max-cut">Unsupervised Learning with Max-cut</h2>
+<p>This notebook is an example of unsupervised learning on a quantum computer. The data used are from the iris data set.</p>
+
+<p>Both classical and quantum methods are used to classify the iris dataset. First, the classical k-means clustering algorithm is walked through. Second, the max-cut problem is mapped to an Ising Hamiltonian and solved using QAOA. This <a href="https://www.kaggle.com/efeergun96/unsupervised-learning-on-iris">kaggle tutorial</a> on k-means, this <a href="https://github.com/qiskit-community/qiskit-qcgpu-provider/blob/master/examples/aqua/Max-Cut.ipynb">qiskit tutorial</a> on max-cut, and the paper <a href="https://arxiv.org/abs/1712.05771"><em>Unsupervised Machine Learning on a Hybrid Quantum Computer</em></a> were helpful aids in constructing this notebook and make for interesting reading.</p>
+
+<p>The next notebook (<a href="https://github.com/ajrazander/Unsupervised-QML/blob/master/Max-cut%202%2B%20Divisive%20Clustering.ipynb">Max-cut 2+ Divisive Clustering</a>) explores how to cluster data into 2+ groups using the same binary classifier approach explored here (i.e. QAOA solving the max-cut problem).</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_iris</span>
+<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">KMeans</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Import Iris dataset
+</span><span class="n">iris_data</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">()</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">iris_data</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">iris_data</span><span class="o">.</span><span class="n">feature_names</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s">'species'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="o">.</span><span class="n">from_codes</span><span class="p">(</span><span class="n">iris_data</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="n">iris_data</span><span class="o">.</span><span class="n">target_names</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sepal length (cm)</th>
+      <th>sepal width (cm)</th>
+      <th>petal length (cm)</th>
+      <th>petal width (cm)</th>
+      <th>species</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>5.1</td>
+      <td>3.5</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>4.9</td>
+      <td>3.0</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>4.7</td>
+      <td>3.2</td>
+      <td>1.3</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4.6</td>
+      <td>3.1</td>
+      <td>1.5</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5.0</td>
+      <td>3.6</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>Let’s look at the data by species to get an idea of how we expect the classical and quantum algorithms to classify the data. Since the quantum computer will be simulated on my laptop, <strong>let’s reduce the dataset</strong> for a faster run time.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Generate subset of data with fewer data points
+</span><span class="n">df_sub</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[::</span><span class="mi">9</span><span class="p">,:]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="c1"># Constrain data to only 2 species
+</span><span class="n">df_sub</span> <span class="o">=</span> <span class="n">df_sub</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">df_sub</span><span class="p">[</span><span class="s">'species'</span><span class="p">]</span> <span class="o">==</span> <span class="s">'setosa'</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">df_sub</span><span class="p">[</span><span class="s">'species'</span><span class="p">]</span> <span class="o">==</span> <span class="s">'versicolor'</span><span class="p">)]</span>
+
+<span class="c1"># View data with known labels as a control to compare future clustering done by k-means and QAOA
+</span><span class="n">sns</span><span class="o">.</span><span class="n">pairplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df_sub</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s">"species"</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="s">"husl"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/output_4_0.png" alt="png" /></p>
+
+<h1 id="a-classical-approach">A Classical Approach</h1>
+<p>The k-means algorithm is an unsupervised machine learning method. K-means will cluster data into k groups based on minimizing each cluster’s sum-of-sqaures also known as inertia</p>
+
+<script type="math/tex; mode=display">\sum_{i=0}^{n} \min_{\mu_j \in C}(\lvert\lvert x_i - \mu_j\rvert\rvert^2)</script>
+
+<p>where <script type="math/tex">\mu_j</script> is the mean of the jth cluster within the set <script type="math/tex">C</script> of clusters.
+(see scikit-learn’s <a href="https://scikit-learn.org/stable/modules/clustering.html#k-means">clustering userguide</a> for more details). The optimal number of clusters k is known for this data (<script type="math/tex">k=2</script>) since the reduced dataset only contains two species. However, we will predent that is unknown. Comparison between the actual species label and how k-means clusters the data will be a performance metric for this and the quantum approach. Since the optimal k is unknown, let’s use the <a href="https://en.wikipedia.org/wiki/Elbow_method_(clustering)">elbow rule</a> to determine the optimal k.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Use k-means as classical unsupervised learning method (compare to quantum method later)
+</span>
+<span class="c1"># Remove species labels (otherwise it's not unsurpervised learning!)
+</span><span class="n">data</span> <span class="o">=</span> <span class="n">df_sub</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,[</span><span class="s">'sepal length (cm)'</span><span class="p">,</span><span class="s">'sepal width (cm)'</span><span class="p">,</span><span class="s">'petal length (cm)'</span><span class="p">,</span><span class="s">'petal width (cm)'</span><span class="p">]]</span>
+<span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+
+<span class="c1"># Use elbow rule to choose optimal k
+</span><span class="n">dis</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">K</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">K</span><span class="p">:</span>
+    <span class="n">kmeans</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">dis</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kmeans</span><span class="o">.</span><span class="n">inertia_</span><span class="p">)</span>
+
+<span class="c1"># Visualize Optimal k
+</span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">K</span><span class="p">,</span><span class="n">dis</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Number of clusters'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Sum of Sqaured Distances About Centroids'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/output_6_0.png" alt="png" /></p>
+
+<p>Looks like 2 (maybe 3?) is most elbowy and thus the optimal k. Let’s fit then visualize the k-means algorithm with the optimal k.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Use optimal k for final k-means model
+</span><span class="n">optimal_k</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">kmeans</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="n">optimal_k</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="c1"># Add k-means labeling to dataframe for later comparison
+</span><span class="n">df_sub</span><span class="p">[</span><span class="s">'label'</span><span class="p">]</span> <span class="o">=</span> <span class="n">kmeans</span><span class="o">.</span><span class="n">labels_</span>
+
+<span class="c1"># Visualize clustering done by k-means algorithm
+</span><span class="n">sns</span><span class="o">.</span><span class="n">pairplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df_sub</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s">'label'</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="s">"husl"</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="n">df_sub</span><span class="o">.</span><span class="n">columns</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/output_8_0.png" alt="png" /></p>
+
+<p>The plots looks identical to the reduced dataset. This is directly confirmed below where we see setosa is 100% in cluster 1 and versicolor is 100% in cluster 0.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Calculate percent of miss labeled data points
+</span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df_sub</span><span class="p">[</span><span class="s">'species'</span><span class="p">],</span> <span class="n">df_sub</span><span class="p">[</span><span class="s">'label'</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">'</span><span class="se">\"</span><span class="s">Average</span><span class="se">\"</span><span class="s"> label classification:'</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">df_sub</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s">'species'</span><span class="p">])</span><span class="o">.</span><span class="nb">sum</span><span class="p">()[</span><span class="s">'label'</span><span class="p">]</span> <span class="o">/</span> <span class="n">df_sub</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s">'species'</span><span class="p">])</span><span class="o">.</span><span class="n">count</span><span class="p">()[</span><span class="s">'label'</span><span class="p">])</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/output_10_0.png" alt="png" /></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"Average" label classification:
+species
+setosa        0.0
+versicolor    1.0
+virginica     NaN
+Name: label, dtype: float64
+</code></pre></div></div>
+
+<p>With k = 2, the k-means algorithm clustering is 100% accurate on this subset of the iris dataset! The elbow rule pulled through! Let’s see how the quantum computer fairs.</p>
+
+<h1 id="a-quantum-approach">A Quantum Approach</h1>
+
+<p>One approach to unsupervised quantum machine learning is to map the problem to a graph optimization problem (specifically max-cut in this notebook). The graph optimization problem can then be mapped to a cost Hamiltonian, which can quickly be solved by a quantum computer.</p>
+
+<h2 id="make-a-graph">Make a Graph</h2>
+
+<p>The first step in mapping data to a graph is calculating the pairwise “distances” between each data point. These distances will weight the edges of the graph. There are different ways to measure “distance.” We will simply use the <script type="math/tex">l^2\text{-norm}</script> (i.e. vector magnitude). Again, we’ll be using a subset of the iris dataset to facilitate fast simulation of a quantum computer.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Remove species labels
+</span><span class="n">data</span> <span class="o">=</span> <span class="n">df_sub</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,[</span><span class="s">'sepal length (cm)'</span><span class="p">,</span><span class="s">'sepal width (cm)'</span><span class="p">,</span><span class="s">'petal length (cm)'</span><span class="p">,</span><span class="s">'petal width (cm)'</span><span class="p">]]</span>
+
+<span class="c1"># Get number of data entries
+</span><span class="n">n_instances</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="c1"># Convert dataframe into array
+</span><span class="n">data_array</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">values</span>
+
+<span class="c1"># Calculate pairwise L2-norms
+</span><span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_instances</span><span class="p">,</span> <span class="n">n_instances</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">n_instances</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">n_instances</span><span class="p">):</span>
+        <span class="n">w</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">data_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">data_array</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">'Weight matrix size:'</span><span class="p">,</span><span class="n">w</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Weight matrix size: (12, 12)
+</code></pre></div></div>
+
+<h2 id="map-the-max-cut-problem-to-a-cost-hamiltonian">Map the Max-cut problem to a Cost Hamiltonian</h2>
+
+<p>To separate the graph into clusters, the graph is cut with a <a href="https://en.wikipedia.org/wiki/Maximum_cut">max-cut</a>: meaning the graph is separated in two while maximizing total weight of the ‘cut’ edges. This is an NP-hard problem. However, it maps to an Ising model, so there is a quantum speedup!</p>
+
+<p>We can interpret the output of the Ising model as follows. The spin variables <script type="math/tex">{\sigma}_i^z \in \{-1, +1\}</script> take on the value <script type="math/tex">{\sigma}_i^z = +1</script> for data in cluster 1, and <script type="math/tex">{\sigma}_i^z = -1</script> for data in cluster 2! The cost of one cut between nodes <script type="math/tex">i</script> and <script type="math/tex">j</script> is the edge’s weight <script type="math/tex">w_{ij}</script> that lies between them. In separating the graph into two sets of nodes (<script type="math/tex">S_1</script> for cluster 1 and <script type="math/tex">S_2</script> for cluster 2), the total weight cut</p>
+
+<script type="math/tex; mode=display">w(\delta(S)) = \sum_{i\in S_1, j\in S_2} w_{ij}.</script>
+
+<p>Assuming a fully connected graph and accounting for the symmetry of <script type="math/tex">w_{ij}</script> (i.e. <script type="math/tex">w_{ij} = w_{ji}</script>), the sum can be expanded to
+<script type="math/tex">% <![CDATA[
+\begin{align}
+w(\delta(S)) & = \frac{1}{2}\sum_{(ij) \in \delta(S_1)} w_{ij} \\
+& = \frac{1}{4}\sum_{ij} w_{ij} - \frac{1}{4} \sum_{ij} w_{ij} {\sigma}_i^z {\sigma}_j^z \\
+& = \frac{1}{4}\sum_{ij} w_{ij} (1- {\sigma}_i^z {\sigma}_j^z).
+\end{align} %]]></script></p>
+
+<p>By taking the negative of this, we can explicity see it’s connection to the Ising Hamiltonian (external field <script type="math/tex">h = 0</script> and constant <script type="math/tex">C</script>)</p>
+
+<script type="math/tex; mode=display">H_{ising} = \sum_{ij}J_{ij}{\sigma}_i^z{\sigma}_j^z + C.</script>
+
+<p>Now that the max-cut is mapped to the Ising Hamiltonian, a quantum computer can efficiently find the max-cut by finding the ground state of <script type="math/tex">H_{ising}</script>. Note, the Ising model conventionally written as a sum over all <strong>nearest neighbor</strong> pairs <script type="math/tex">% <![CDATA[
+\sum_{<ij>} %]]></script>. Since the graph is fully connected (or can be made fully connected by adding edges of weight zero), <script type="math/tex">% <![CDATA[
+\sum_{<ij>} %]]></script> is identical to <script type="math/tex">\sum_{ij}</script>.</p>
+
+<p>More details on the derivation can be found in the paper <a href="https://arxiv.org/abs/1712.05771"><em>Unsupervised Machine Learning on a Hybrid Quantum Computer</em></a></p>
+
+<h2 id="solve-the-max-cut-problem-with-qaoa">Solve the Max-cut Problem with QAOA</h2>
+
+<p><a href="https://qiskit.org">Qiskit</a> will be used to implement QAOA. QAOA is a quantum optimizer that will adiabatically find the ground state of the cost Hamiltonian–exactly what we need!</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Quantum Computing packages
+</span><span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">BasicAer</span>
+<span class="kn">from</span> <span class="nn">qiskit.aqua</span> <span class="kn">import</span> <span class="n">QuantumInstance</span>
+<span class="kn">from</span> <span class="nn">qiskit.aqua.algorithms</span> <span class="kn">import</span> <span class="n">QAOA</span>
+<span class="kn">from</span> <span class="nn">qiskit.aqua.translators.ising</span> <span class="kn">import</span> <span class="n">max_cut</span>
+<span class="kn">from</span> <span class="nn">qiskit.aqua.components.optimizers</span> <span class="kn">import</span> <span class="n">COBYLA</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># QAOA hyperparameters and initialization
+</span><span class="n">p</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Number of adiabatic steps must be &gt; 0
+</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">COBYLA</span><span class="p">()</span>
+<span class="n">qubit_ops</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">max_cut</span><span class="o">.</span><span class="n">get_max_cut_qubitops</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+<span class="n">qaoa</span> <span class="o">=</span> <span class="n">QAOA</span><span class="p">(</span><span class="n">qubit_ops</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+
+<span class="c1"># Initialize quantum simulator
+</span><span class="n">backend</span> <span class="o">=</span> <span class="n">BasicAer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'statevector_simulator'</span><span class="p">)</span>
+<span class="n">quantum_instance</span> <span class="o">=</span> <span class="n">QuantumInstance</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Execute QAOA on quantum simulator
+</span><span class="n">result</span> <span class="o">=</span> <span class="n">qaoa</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">quantum_instance</span><span class="p">)</span>
+
+<span class="c1"># Extract clustering solution from result variable
+</span><span class="n">x</span> <span class="o">=</span> <span class="n">max_cut</span><span class="o">.</span><span class="n">sample_most_likely</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s">'eigvecs'</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># Show cluster results
+</span><span class="k">print</span><span class="p">(</span><span class="s">'cluster solution:'</span><span class="p">,</span> <span class="n">max_cut</span><span class="o">.</span><span class="n">get_graph_solution</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cluster solution: [0. 0. 0. 0. 0. 0. 1. 1. 1. 1. 1. 1.]
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Extract labels and include them in df_sub
+</span><span class="n">labels</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">max_cut</span><span class="o">.</span><span class="n">get_graph_solution</span><span class="p">(</span><span class="n">x</span><span class="p">),</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">'label'</span><span class="p">])</span>
+<span class="n">df_sub</span><span class="p">[</span><span class="s">'label'</span><span class="p">]</span> <span class="o">=</span> <span class="n">labels</span>
+
+<span class="c1"># Show data by cluster
+</span><span class="n">sns</span><span class="o">.</span><span class="n">pairplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df_sub</span><span class="p">,</span><span class="n">hue</span><span class="o">=</span><span class="s">'label'</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="s">"husl"</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="n">df_sub</span><span class="o">.</span><span class="n">columns</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Display cluster label mean by species
+</span><span class="k">print</span><span class="p">(</span><span class="s">'</span><span class="se">\"</span><span class="s">Average</span><span class="se">\"</span><span class="s"> label classification:'</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">df_sub</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s">'species'</span><span class="p">])</span><span class="o">.</span><span class="nb">sum</span><span class="p">()[</span><span class="s">'label'</span><span class="p">]</span> <span class="o">/</span> <span class="n">df_sub</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s">'species'</span><span class="p">])</span><span class="o">.</span><span class="n">count</span><span class="p">()[</span><span class="s">'label'</span><span class="p">])</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/output_17_0.png" alt="png" /></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"Average" label classification:
+species
+setosa        0.0
+versicolor    1.0
+virginica     NaN
+Name: label, dtype: float64
+</code></pre></div></div>
+
+<p>The plots looks identical to the reduced dataset–again! This is directly confirmed by the “average” label classification. All of setosa is in cluster 0 and all of versicolor is in cluster 1.</p>
+
+  </div><a class="u-url" href="/unsupervised-machine-learning/max-cut/2019/11/07/Quantum-Max-cut-vs-K-means.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Applied Quantum Computation</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Applied Quantum Computation</li><li><a class="u-email" href="mailto:quantumrepeater@gmail.com">quantumrepeater@gmail.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/ajrazander"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">ajrazander</span></a></li><li><a href="https://www.twitter.com/aj_rasmusa"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">aj_rasmusa</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Quantum algorithms explained, computed, and tutorialized.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
