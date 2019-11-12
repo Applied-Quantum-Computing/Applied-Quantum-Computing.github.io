@@ -23,9 +23,9 @@ email: quantumrepeater@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   Quantum algorithms explained, computed, and tutorialized.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://ajrazander.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://applied-quantum-computing.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: aj_rasmusa
-github_username:  ajrazander
+github_username:  applied-quantum-computing
 
 # Build settings
 theme: minima
