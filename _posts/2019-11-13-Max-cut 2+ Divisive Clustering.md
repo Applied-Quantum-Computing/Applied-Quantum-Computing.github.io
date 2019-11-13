@@ -7,11 +7,7 @@ mathjax: true
 categories: unsupervised-machine-learning max-cut
 front-image: "assets/images/output_13_0.png"
 source-code: "https://github.com/ajrazander/Unsupervised-QML/blob/master/Max-cut_2%2B_divisive_clustering.ipynb"
-commentary: This post has a mouthful of a title, but it's something I'm rather proud of. While messing around with max-cut
-I wondered if there was a way to do more than simply split a dataset in two. Talking about this with some other physics
-grad students, a friend mentioned hierarchical techniques where you recurcively split the data in half until all the data
-are in their own clusters. Now, if you can cleverly stop this process part way, you've effectively turned the binary classifier
-that is max-cut into a multi-nary (made up word) classify! How cool! :D Hope you enjoy this one as much as I did.
+commentary: I'm not 100% sure how to pronounce my own title for this one. It's a mouthful, but the code is something I'm rather proud of. While messing around with max-cut, I wondered if there was a way to do more than simply split a dataset in two (binary classification). Talking about this with some other physics grad students, a friend mentioned hierarchical techniques where you recursively divide the data in half until all the data are in their own clusters (a divisive hierarchy of clusters). If you cleverly stop this process part way, you've effectively turned the binary classifier that is max-cut into a multinary (made up word) classifier! How cool! :D Hope you enjoy this one as much as I did. <strong>PROJECT IDEA:</strong> If one could start with individual data points and slowly build up clusters (agglomerative hierarchy), I imagine that would be more effective since qcs have only a few dozen qubits and the divise method requires loading the entire dataset into the qc at start.
 ---
 
 # 2+ Clustering with Max-cut

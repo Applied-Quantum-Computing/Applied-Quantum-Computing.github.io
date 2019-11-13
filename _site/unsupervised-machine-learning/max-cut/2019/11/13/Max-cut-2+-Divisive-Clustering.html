@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Divisive Hierarchical Quantum Clustering with Max-cut | Applied Quantum Computation</title>
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="Divisive Hierarchical Quantum Clustering with Max-cut" />
+<meta name="author" content="AJ Rasmusson" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="2+ Clustering with Max-cut This notebook is an example of unsupervised learning on a quantum computer. The data used are from the iris data set. For faster run time, you will need an IBMQ account to use their 32 qubit simulator." />
+<meta property="og:description" content="2+ Clustering with Max-cut This notebook is an example of unsupervised learning on a quantum computer. The data used are from the iris data set. For faster run time, you will need an IBMQ account to use their 32 qubit simulator." />
+<link rel="canonical" href="http://localhost:4000/unsupervised-machine-learning/max-cut/2019/11/13/Max-cut-2+-Divisive-Clustering.html" />
+<meta property="og:url" content="http://localhost:4000/unsupervised-machine-learning/max-cut/2019/11/13/Max-cut-2+-Divisive-Clustering.html" />
+<meta property="og:site_name" content="Applied Quantum Computation" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-11-13T00:00:00-05:00" />
+<script type="application/ld+json">
+{"description":"2+ Clustering with Max-cut This notebook is an example of unsupervised learning on a quantum computer. The data used are from the iris data set. For faster run time, you will need an IBMQ account to use their 32 qubit simulator.","@type":"BlogPosting","headline":"Divisive Hierarchical Quantum Clustering with Max-cut","dateModified":"2019-11-13T00:00:00-05:00","datePublished":"2019-11-13T00:00:00-05:00","url":"http://localhost:4000/unsupervised-machine-learning/max-cut/2019/11/13/Max-cut-2+-Divisive-Clustering.html","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/unsupervised-machine-learning/max-cut/2019/11/13/Max-cut-2+-Divisive-Clustering.html"},"author":{"@type":"Person","name":"AJ Rasmusson"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Applied Quantum Computation" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Applied Quantum Computation</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/beginner/">Beginner</a><a class="page-link" href="/intermediate/">Intermediate</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+
+  <br><br><br><br><br>
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline" align="center">Divisive Hierarchical Quantum Clustering with Max-cut</h1>
+    <p align="center">Source code can be found <a href="https://github.com/ajrazander/Unsupervised-QML/blob/master/Max-cut_2%2B_divisive_clustering.ipynb">here</a></p>
+    <p class="post-meta"  align="center">
+      <time class="dt-published" datetime="2019-11-13T00:00:00-05:00" itemprop="datePublished">Nov 13, 2019
+      </time>• <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span class="p-author h-card" itemprop="name">AJ Rasmusson</span></span></p>
+  </header>
+  <br><br><br><br><br>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h1 id="2-clustering-with-max-cut">2+ Clustering with Max-cut</h1>
+<p>This notebook is an example of unsupervised learning on a quantum computer. The data used are from the iris data set. For faster run time, you will need an <a href="https://quantum-computing.ibm.com">IBMQ account</a> to use their 32 qubit simulator.</p>
+
+<p>In the <a href="https://ajrazander.github.io/unsupervised-machine-learning/max-cut/2019/11/07/Quantum-Max-cut-vs-K-means.html">previous notebook</a>, the max-cut problem was solved using QAOA, which gave a quantum speed up to unsupervised learning. Solving the max-cut problem is effectively a binary classifier. In this notebook, we focus on techniques that allow a binary classifier to cluster data into 2+ groups. To summarize this idea with a single question: How can a binary classifier, like QAOA solving the max-cut problem, be used to cluster data into more than 2 clusters?</p>
+
+<h2 id="divisive-hierarchical-quantum-clustering">Divisive Hierarchical Quantum Clustering</h2>
+<p>One solution is to apply a divisive (“top-down”) <a href="https://en.wikipedia.org/wiki/Hierarchical_clustering">hierarchial clustering</a> method. This algorithm starts with the whole data set (the top) and slowly breaks it up until all data points are individual clusters (the bottom). For QAOA solving max-cut a divisive hierarchical clustering algorithm would execute as follows: (0) solve the max-cut problem on the entire dataset resulting in two child clusters, (1) solve the max-cut problem on each child cluster, repeat (1) until every data point is in an individual cluster.</p>
+
+<p>Let’s get to it!</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">jit</span>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_iris</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
+
+<span class="c1"># Load IBM quantum computing options
+</span><span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">IBMQ</span>
+<span class="n">IBMQ</span><span class="o">.</span><span class="n">load_account</span><span class="p">()</span>  <span class="c1"># Load account from disk
+</span>
+<span class="c1"># Quantum Computing packages
+</span><span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">BasicAer</span>
+<span class="kn">from</span> <span class="nn">qiskit.aqua</span> <span class="kn">import</span> <span class="n">QuantumInstance</span>
+<span class="kn">from</span> <span class="nn">qiskit.aqua.algorithms</span> <span class="kn">import</span> <span class="n">QAOA</span>
+<span class="kn">from</span> <span class="nn">qiskit.aqua.translators.ising</span> <span class="kn">import</span> <span class="n">max_cut</span>
+<span class="kn">from</span> <span class="nn">qiskit.aqua.components.optimizers</span> <span class="kn">import</span> <span class="n">COBYLA</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Import Iris dataset
+</span><span class="n">iris_data</span> <span class="o">=</span> <span class="n">load_iris</span><span class="p">()</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">iris_data</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">iris_data</span><span class="o">.</span><span class="n">feature_names</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s">'species'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="o">.</span><span class="n">from_codes</span><span class="p">(</span><span class="n">iris_data</span><span class="o">.</span><span class="n">target</span><span class="p">,</span> <span class="n">iris_data</span><span class="o">.</span><span class="n">target_names</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sepal length (cm)</th>
+      <th>sepal width (cm)</th>
+      <th>petal length (cm)</th>
+      <th>petal width (cm)</th>
+      <th>species</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>5.1</td>
+      <td>3.5</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>4.9</td>
+      <td>3.0</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>4.7</td>
+      <td>3.2</td>
+      <td>1.3</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4.6</td>
+      <td>3.1</td>
+      <td>1.5</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5.0</td>
+      <td>3.6</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>The iris dataset contains 150 entries. For reasonable execution time on the simulated quantum computer, we’ll need to chop this down to ~12 entries.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Remove species labels
+</span><span class="n">data_full</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,[</span><span class="s">'petal length (cm)'</span><span class="p">,</span><span class="s">'petal width (cm)'</span><span class="p">,</span><span class="s">'sepal length (cm)'</span><span class="p">,</span><span class="s">'sepal width (cm)'</span><span class="p">]]</span>
+
+<span class="c1"># Reduce number of data points
+</span><span class="n">df_sub</span> <span class="o">=</span> <span class="n">df</span><span class="p">[::</span><span class="mi">13</span><span class="p">]</span>  <span class="c1"># Dataframe with species labels
+</span><span class="n">data_sub</span> <span class="o">=</span> <span class="n">data_full</span><span class="p">[::</span><span class="mi">13</span><span class="p">]</span>  <span class="c1"># Dataframe without species lables
+</span><span class="k">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data_sub</span><span class="p">),</span><span class="s">'data entries'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>12 data entries
+</code></pre></div></div>
+
+<p>Now that the data is all squared away, let’s solve the max-cut problem with QAOA just as we did in the <a href="https://github.com/ajrazander/Unsupervised-QML/blob/master/Max-cut.ipynb">previous notebook</a> except this time we want to solve the max-cut problem on each resulting child cluster. To do this, we will track how the data is cut each iteration. This gets a bit messing with for loops and if statements.</p>
+
+<p>Each max-cut creates two new branches, resulting in a binary tree. Since the end case has all n data points in their own clusters, there must be n leaves. For a binary tree, that leaves (no pun intended) the minimum height of the tree <script type="math/tex">h = \log_2{n}</script>. Thus, at least <script type="math/tex">h</script> iterations need to be completed.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Helper function(s)
+</span>
+<span class="c1"># Computes pairwise L2-norms (@jit gives x10 speed up)
+</span><span class="o">@</span><span class="n">jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">calc_w</span><span class="p">(</span><span class="n">data_array</span><span class="p">):</span>
+    <span class="n">n_instances</span> <span class="o">=</span> <span class="n">data_array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_instances</span><span class="p">,</span> <span class="n">n_instances</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">n_instances</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">n_instances</span><span class="p">):</span>
+            <span class="n">w</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">data_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">data_array</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">w</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># This can take several minutes to run
+</span>
+<span class="c1"># Minimum iterations to turn datapoints into their own clusters (i.e. min. height of binary tree)
+</span><span class="n">h</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data_sub</span><span class="p">)))</span>
+
+<span class="c1"># Max number of qubits your computer can simulate
+</span><span class="n">comp_qubits</span> <span class="o">=</span> <span class="mi">15</span>
+
+<span class="c1"># Copy data for manipulation
+</span><span class="n">data</span> <span class="o">=</span> <span class="n">data_sub</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="c1"># QAOA hyperparameters and backend initialization
+</span><span class="n">p</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Number of adiabatic steps must be &gt; 0
+</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">COBYLA</span><span class="p">()</span>  <span class="c1"># Arbitrary selection
+</span><span class="n">provider</span> <span class="o">=</span> <span class="n">IBMQ</span><span class="o">.</span><span class="n">get_provider</span><span class="p">(</span><span class="n">group</span><span class="o">=</span><span class="s">'open'</span><span class="p">)</span>  <span class="c1"># Load provider to access backends
+</span><span class="n">backend_ibm</span> <span class="o">=</span> <span class="n">provider</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'ibmq_qasm_simulator'</span><span class="p">)</span>  <span class="c1"># Simulate on IBM's cloud service
+</span><span class="n">backend_local</span> <span class="o">=</span> <span class="n">BasicAer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'statevector_simulator'</span><span class="p">)</span>  <span class="c1"># Simulate on local machine
+</span>
+<span class="c1"># Iterate over minimum height of tree
+</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">h</span><span class="p">):</span>
+    <span class="c1"># Initialize 'labels' column for future QAOA output
+</span>    <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s">'cluster_'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s">'cut_'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    
+    <span class="c1"># Select subsets of data based on clustering from previous max-cut solution
+</span>    <span class="n">dfs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">cluster_range</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s">'cluster_'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">cluster_range</span><span class="p">:</span>
+            <span class="n">df_cluster</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s">'cluster_'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span> <span class="o">==</span> <span class="n">j</span><span class="p">,</span><span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">[:</span><span class="mi">4</span><span class="p">]]</span>
+            <span class="c1"># if df_cluster length is 1 then it can't be further cut, so only consider lengths &gt; 1
+</span>            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_cluster</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">dfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_cluster</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">[:</span><span class="mi">4</span><span class="p">]])</span>
+
+    <span class="c1"># Solve max-cut with QAOA on each child cluster
+</span>    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">df_part</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dfs</span><span class="p">):</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">calc_w</span><span class="p">(</span><span class="n">df_part</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>  <span class="c1"># Calculate pairwise distances between points
+</span>        
+        <span class="c1"># Initialize QAOA and execute
+</span>        <span class="n">qubit_ops</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="n">max_cut</span><span class="o">.</span><span class="n">get_max_cut_qubitops</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+        <span class="n">qaoa</span> <span class="o">=</span> <span class="n">QAOA</span><span class="p">(</span><span class="n">qubit_ops</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+        <span class="c1"># If there are 'too many' qubits, use IBM's 32 qubit backend
+</span>        <span class="k">if</span> <span class="n">w</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">comp_qubits</span><span class="p">:</span>
+            <span class="n">backend</span> <span class="o">=</span> <span class="n">backend_ibm</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">backend</span> <span class="o">=</span> <span class="n">backend_local</span>
+        <span class="n">quantum_instance</span> <span class="o">=</span> <span class="n">QuantumInstance</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">skip_qobj_validation</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">qaoa</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">quantum_instance</span><span class="p">)</span>
+
+        <span class="c1"># Extract results
+</span>        <span class="n">x</span> <span class="o">=</span> <span class="n">max_cut</span><span class="o">.</span><span class="n">sample_most_likely</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s">'eigvecs'</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="c1"># Store cluster results back into Dataframe. Labels must be unqiue each iteration hence + 2*j
+</span>        <span class="n">df_part</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s">'cluster_'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="n">max_cut</span><span class="o">.</span><span class="n">get_graph_solution</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">j</span>
+        <span class="n">df_part</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s">'cut_'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="n">max_cut</span><span class="o">.</span><span class="n">max_cut_value</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+        
+        <span class="c1"># Update Dataframe with new clusters and cut weights
+</span>        <span class="n">data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">df_part</span><span class="p">)</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s">'Iteration'</span><span class="p">,</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="s">'of'</span><span class="p">,</span><span class="n">h</span><span class="p">,</span><span class="s">'completed'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Iteration 1 of 3 completed
+Iteration 2 of 3 completed
+Iteration 3 of 3 completed
+</code></pre></div></div>
+
+<p>Let’s take a look at how the clustering compares to the known species labeling.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Include results from QAOA in df_sub dataframe for comparison to species label
+</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">h</span><span class="p">):</span>
+    <span class="n">df_sub</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s">'cluster_'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s">'cluster_'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span>
+    <span class="n">df_sub</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s">'cut_'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s">'cut_'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span>
+<span class="n">df_sub</span>
+</code></pre></div></div>
+
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sepal length (cm)</th>
+      <th>sepal width (cm)</th>
+      <th>petal length (cm)</th>
+      <th>petal width (cm)</th>
+      <th>species</th>
+      <th>cluster_0</th>
+      <th>cut_0</th>
+      <th>cluster_1</th>
+      <th>cut_1</th>
+      <th>cluster_2</th>
+      <th>cut_2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>5.1</td>
+      <td>3.5</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+      <td>1.0</td>
+      <td>150.460827</td>
+      <td>1.0</td>
+      <td>2.974861</td>
+      <td>1.0</td>
+      <td>0.561177</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>4.3</td>
+      <td>3.0</td>
+      <td>1.1</td>
+      <td>0.1</td>
+      <td>setosa</td>
+      <td>1.0</td>
+      <td>150.460827</td>
+      <td>0.0</td>
+      <td>2.974861</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>5.0</td>
+      <td>3.4</td>
+      <td>1.6</td>
+      <td>0.4</td>
+      <td>setosa</td>
+      <td>1.0</td>
+      <td>150.460827</td>
+      <td>1.0</td>
+      <td>2.974861</td>
+      <td>0.0</td>
+      <td>0.561177</td>
+    </tr>
+    <tr>
+      <th>39</th>
+      <td>5.1</td>
+      <td>3.4</td>
+      <td>1.5</td>
+      <td>0.2</td>
+      <td>setosa</td>
+      <td>1.0</td>
+      <td>150.460827</td>
+      <td>1.0</td>
+      <td>2.974861</td>
+      <td>1.0</td>
+      <td>0.561177</td>
+    </tr>
+    <tr>
+      <th>52</th>
+      <td>6.9</td>
+      <td>3.1</td>
+      <td>4.9</td>
+      <td>1.5</td>
+      <td>versicolor</td>
+      <td>0.0</td>
+      <td>150.460827</td>
+      <td>2.0</td>
+      <td>30.857643</td>
+      <td>3.0</td>
+      <td>3.252945</td>
+    </tr>
+    <tr>
+      <th>65</th>
+      <td>6.7</td>
+      <td>3.1</td>
+      <td>4.4</td>
+      <td>1.4</td>
+      <td>versicolor</td>
+      <td>0.0</td>
+      <td>150.460827</td>
+      <td>2.0</td>
+      <td>30.857643</td>
+      <td>3.0</td>
+      <td>3.252945</td>
+    </tr>
+    <tr>
+      <th>78</th>
+      <td>6.0</td>
+      <td>2.9</td>
+      <td>4.5</td>
+      <td>1.5</td>
+      <td>versicolor</td>
+      <td>0.0</td>
+      <td>150.460827</td>
+      <td>2.0</td>
+      <td>30.857643</td>
+      <td>2.0</td>
+      <td>3.252945</td>
+    </tr>
+    <tr>
+      <th>91</th>
+      <td>6.1</td>
+      <td>3.0</td>
+      <td>4.6</td>
+      <td>1.4</td>
+      <td>versicolor</td>
+      <td>0.0</td>
+      <td>150.460827</td>
+      <td>2.0</td>
+      <td>30.857643</td>
+      <td>2.0</td>
+      <td>3.252945</td>
+    </tr>
+    <tr>
+      <th>104</th>
+      <td>6.5</td>
+      <td>3.0</td>
+      <td>5.8</td>
+      <td>2.2</td>
+      <td>virginica</td>
+      <td>0.0</td>
+      <td>150.460827</td>
+      <td>3.0</td>
+      <td>30.857643</td>
+      <td>5.0</td>
+      <td>4.912491</td>
+    </tr>
+    <tr>
+      <th>117</th>
+      <td>7.7</td>
+      <td>3.8</td>
+      <td>6.7</td>
+      <td>2.2</td>
+      <td>virginica</td>
+      <td>0.0</td>
+      <td>150.460827</td>
+      <td>3.0</td>
+      <td>30.857643</td>
+      <td>4.0</td>
+      <td>4.912491</td>
+    </tr>
+    <tr>
+      <th>130</th>
+      <td>7.4</td>
+      <td>2.8</td>
+      <td>6.1</td>
+      <td>1.9</td>
+      <td>virginica</td>
+      <td>0.0</td>
+      <td>150.460827</td>
+      <td>3.0</td>
+      <td>30.857643</td>
+      <td>4.0</td>
+      <td>4.912491</td>
+    </tr>
+    <tr>
+      <th>143</th>
+      <td>6.8</td>
+      <td>3.2</td>
+      <td>5.9</td>
+      <td>2.3</td>
+      <td>virginica</td>
+      <td>0.0</td>
+      <td>150.460827</td>
+      <td>3.0</td>
+      <td>30.857643</td>
+      <td>5.0</td>
+      <td>4.912491</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>Solving the max-cut problem gives clustering labels as a binary tree. To see this, look at the columns ‘cluster_(i)’. As you follow from one column to the next you see, for example, cluster 0 in ‘cluster_0’ is split into two clusters in column ‘cluster_1’ and so on.</p>
+
+<h2 id="stop-criteria">Stop Criteria</h2>
+<p>To find the optimal clustering, a depth-first-search is performed down the tree. The search is stopped once the leaves are below some predefined cut weight. Below, the cut weights vs the associated number of clusters is plotted. We see (knowing the actual species) the best option is to follow the elbow rule and stop at 3 clusters. However, which of the two possible 3 cluster configurations do we choose? The one with the higher cut weight. The higher cut weight implies a more separated graph resulted from the cut, and the more the separation, the more likely the clusters are in fact different.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Plot max-cut weights vs number of clusters created
+</span><span class="n">cuts</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">cluster_num</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># Get max-cut weights and associated number of clusters from results in df_sub
+</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">h</span><span class="p">):</span>
+    <span class="c1"># Collect max-cut weights
+</span>    <span class="n">cuts</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="n">df_sub</span><span class="p">[</span><span class="s">'cut_'</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+    <span class="c1"># Number how many clusters have been made for this cut
+</span>    <span class="n">cut_off</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="n">i</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">cut_off</span><span class="p">):</span>
+        <span class="n">cluster_num</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">cluster_num</span><span class="p">,</span><span class="n">cuts</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Number of clusters'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Max cut weight'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="assets/images/output_11_0.png" alt="png" /></p>
+
+<p>Let’s traverse the binary tree along the ‘heaviest’ branches and stop at the number of leaves associated with the elbow rule. Based on the plot above that would be 3 clusters where the 2nd and 3rd clusters are associated with the point (3,~30)</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># cut_off sets where the 'elbow' is in for the elbow rule
+</span><span class="n">cut_off</span> <span class="o">=</span> <span class="mf">0.10</span>  <span class="c1"># 10% of global maximum is acceptable
+</span>
+<span class="c1"># First cut should be the largest compared to subsequent cuts
+</span><span class="n">global_maxim</span> <span class="o">=</span> <span class="n">df_sub</span><span class="p">[</span><span class="s">'cut_0'</span><span class="p">]</span><span class="o">.</span><span class="nb">max</span><span class="p">()</span>
+
+<span class="c1"># Initialize final clustering column
+</span><span class="n">df_sub</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s">'final'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="n">clus_col</span><span class="p">,</span> <span class="n">cut_col</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">df_sub</span><span class="p">[</span><span class="n">df_sub</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">5</span><span class="p">::</span><span class="mi">2</span><span class="p">]],</span><span class="n">df_sub</span><span class="p">[</span><span class="n">df_sub</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">6</span><span class="p">::</span><span class="mi">2</span><span class="p">]]):</span>
+    <span class="c1"># Find the maximum cut for this particular column of data
+</span>    <span class="n">maxim</span> <span class="o">=</span> <span class="n">df_sub</span><span class="p">[</span><span class="n">cut_col</span><span class="p">]</span><span class="o">.</span><span class="nb">max</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">maxim</span> <span class="o">&gt;</span> <span class="n">global_maxim</span><span class="o">*</span><span class="n">cut_off</span><span class="p">:</span>
+        <span class="n">df_sub</span><span class="p">[</span><span class="s">'final'</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">df_sub</span><span class="p">[</span><span class="n">clus_col</span><span class="p">][</span><span class="n">df_sub</span><span class="p">[</span><span class="n">cut_col</span><span class="p">]</span> <span class="o">==</span> <span class="n">maxim</span><span class="p">])</span>
+
+<span class="c1"># Constrain data to final clustering assignments
+</span><span class="n">df_sub_plot</span> <span class="o">=</span> <span class="n">df_sub</span><span class="p">[[</span><span class="s">'sepal length (cm)'</span><span class="p">,</span><span class="s">'sepal width (cm)'</span><span class="p">,</span><span class="s">'petal length (cm)'</span><span class="p">,</span><span class="s">'petal width (cm)'</span><span class="p">,</span><span class="s">'final'</span><span class="p">]]</span>
+
+<span class="c1"># Visualize clustering
+</span><span class="n">sns</span><span class="o">.</span><span class="n">pairplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df_sub_plot</span><span class="p">,</span><span class="n">hue</span><span class="o">=</span><span class="s">'final'</span><span class="p">,</span><span class="n">palette</span><span class="o">=</span><span class="s">"husl"</span><span class="p">,</span><span class="nb">vars</span><span class="o">=</span><span class="n">df_sub</span><span class="o">.</span><span class="n">columns</span><span class="p">[:</span><span class="mi">4</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Display mean of cluster labels by species
+</span><span class="k">print</span><span class="p">(</span><span class="s">'</span><span class="se">\"</span><span class="s">Average</span><span class="se">\"</span><span class="s"> label classification:'</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">df_sub</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s">'species'</span><span class="p">])</span><span class="o">.</span><span class="nb">sum</span><span class="p">()[</span><span class="s">'final'</span><span class="p">]</span> <span class="o">/</span> <span class="n">df_sub</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s">'species'</span><span class="p">])</span><span class="o">.</span><span class="n">count</span><span class="p">()[</span><span class="s">'final'</span><span class="p">])</span>
+</code></pre></div></div>
+
+<p><img src="assets/images/output_13_0.png" alt="png" /></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"Average" label classification:
+species
+setosa        1.0
+versicolor    2.0
+virginica     3.0
+Name: final, dtype: float64
+</code></pre></div></div>
+
+<p>The ‘Average’ label classification is the average cluster label (1, 2, or 3) for each species. Setosa is all in cluster 1; versicolor is all in cluster 2; and virginica is all in cluster 3. The divisive hierarchical quantum clustering did a great job!</p>
+
+  </div><a class="u-url" href="/unsupervised-machine-learning/max-cut/2019/11/13/Max-cut-2+-Divisive-Clustering.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Applied Quantum Computation</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Applied Quantum Computation</li><li><a class="u-email" href="mailto:quantumrepeater@gmail.com">quantumrepeater@gmail.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/applied-quantum-computing"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">applied-quantum-computing</span></a></li><li><a href="https://www.twitter.com/aj_rasmusa"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">aj_rasmusa</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Quantum algorithms explained, computed, and tutorialized.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

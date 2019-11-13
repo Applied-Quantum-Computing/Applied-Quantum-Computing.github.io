@@ -2,16 +2,12 @@
 layout: post
 title:  "Quantum Unsupervised Learning with Max-cut"
 author: AJ Rasmusson
-date:   2019-11-13
+date:   2019-11-07
 mathjax: true
 categories: unsupervised-machine-learning max-cut
 front-image: "assets/images/output_17_0.png"
 source-code: "https://github.com/ajrazander/Unsupervised-QML/blob/master/Max-cut_vs_k-means.ipynb"
-commentary: I had heard quantum computing would enhance AI and machine learning, but this is the first time I worked with it myself.
-Most of this tutorial is from other resources and is really just me trying to understand those resources (see details in code).
-The plan was to make this tutorial for myself (based on those other tutorials) then tweak it and mess with. Hopefully by messing around enough,
-I could find a way for small (< 50 qubit--[NISQ](https://arxiv.org/abs/1801.00862)) quantum computers to still be powerful learning machines
-compared with current computers. If you want to see some messing around, check out [this other post](https://github.com/ajrazander/Unsupervised-QML/blob/master/Max-cut%202%2B%20Divisive%20Clustering.ipynb).
+commentary: Quantum computing is supposed to enhance AI and machine learning, but this is the first time I worked with it myself. Most of this tutorial is from other resources and is really just me trying to understand those resources (see details in code). The plan was to make this tutorial for myself (based on those other tutorials) then tweak it and mess with. Hopefully by messing around enough, I could find a way for small (< 50 qubit--<a href="https://arxiv.org/abs/1801.00862">NISQ</a>) quantum computers to still be powerful learning machines compared with current computers. <strong>UPDATE:</strong> If you want to see some messing around, check out <a href="https://ajrazander.github.io/unsupervised-machine-learning/max-cut/2019/11/13/Max-cut-2+-Divisive-Clustering.html">this other post</a>.
 ---
 
 ## Unsupervised Learning with Max-cut

@@ -4,17 +4,9 @@ layout: default
 
 <div class="home">
 
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
+  <br><br><br><br><br>
   {{ content }}
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
+  <br><br><br><br><br>
 
   {%- if site.posts.size > 0 -%}
     <h2 class="post-list-heading">{{ page.list_title | default: "Latest Projects" }}</h2>
@@ -28,7 +20,16 @@ layout: default
             {{ post.title | escape }}
           </a>
         </h3>
-        <p> {{ post.commentary }} </p>
+        <p class="post-meta"  align="center">
+          <time class="dt-published" datetime="{{ post.date | date_to_xmlschema }}" itemprop="datePublished">
+            {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+            {{ post.date | date: date_format }}
+          </time>
+          {%- if post.author -%}
+          • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span class="p-author h-card" itemprop="name">{{ post.author }}</span></span>
+          {%- endif -%}</p>
+        {{ post.commentary }}
+        <br>
 	    <img src={{post.front-image}} alt="HTML5 Icon">
         {%- if site.show_excerpts -%}
           {{ post.excerpt }}
