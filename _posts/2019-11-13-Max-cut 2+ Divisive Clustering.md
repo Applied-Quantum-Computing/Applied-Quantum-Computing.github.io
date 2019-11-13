@@ -2,7 +2,7 @@
 layout: post
 title:  "Divisive Hierarchical Quantum Clustering with Max-cut"
 author: AJ Rasmusson
-date:   2019-11-09
+date:   2019-11-13
 mathjax: true
 categories: unsupervised-machine-learning max-cut
 front-image: "assets/images/output_13_0.png"
