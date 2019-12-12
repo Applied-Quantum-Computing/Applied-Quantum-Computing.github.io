@@ -30,6 +30,9 @@ List of to-dos for the website and projects
     - apply to unitary fund for money to help advertise and gain audience
     - pool reddit for advice/advertise
     - search for most common quantum computing questions on reddit and answer those.
+* Searchability
+    - increase site's seating in google search results
+
 
 ### Projects
 
