@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Beginner
-exclude: false
+exclude: true
 permalink: /beginner/
 ---
 

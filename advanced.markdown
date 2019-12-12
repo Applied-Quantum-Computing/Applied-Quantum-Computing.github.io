@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Advanced
-exclude: false
+exclude: true
 permalink: /advanced/
 ---
 

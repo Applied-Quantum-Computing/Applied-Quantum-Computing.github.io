@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Intermediate
-exclude: false
+exclude: true
 permalink: /intermediate/
 ---
 
