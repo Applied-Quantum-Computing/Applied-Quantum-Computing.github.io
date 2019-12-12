@@ -1,11 +1,10 @@
 ---
-layout: default
+layout: page
 title: About
 exclude: false
 permalink: /about/
 ---
 
-## Mission Statement
 Applied Quantum Computation is about lowering the barrier to entry into the quantum computing field. Our goal is to
 pack this site with personalized tutorials on different quantum algorithms, so **you** can learn how to use them.
 There is a wave of quantum computing research on algorithms and hardware that pushing into new frontiers. This website
@@ -16,7 +15,7 @@ New projects are posted monthly. So far, all projects are done in [qiskit](https
 , [Q#](https://www.microsoft.com/en-us/quantum/development-kit), [PennyLane](https://github.com/XanaduAI/pennylane),
  and more! Beginners and experts will find something interesting. Find a project, get your fingers typing, and learn!
 
-## Contact Us
+### Contact Us
 Can't find a project you're looking for? Try it yourself! We'd love to hear how it turns out. 
 Have something you think we'd be interested in computing, reading, etc.? Feel free to email us.
 

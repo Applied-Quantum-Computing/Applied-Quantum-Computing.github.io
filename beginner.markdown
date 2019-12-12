@@ -1,8 +1,8 @@
 ---
-layout: default
+layout: page
 title: Beginner
 exclude: false
 permalink: /beginner/
 ---
 
-## Beginner Level Projects
+welcome to beginner!

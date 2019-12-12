@@ -1,8 +1,8 @@
 ---
-layout: default
+layout: page
 title: Intermediate
 exclude: false
 permalink: /intermediate/
 ---
 
-## Intermediate Level Projects
+welcome to intermediate!

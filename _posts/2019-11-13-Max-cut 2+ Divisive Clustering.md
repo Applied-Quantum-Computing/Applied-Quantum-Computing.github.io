@@ -1,14 +1,24 @@
 ---
 layout: post
+published: true
 title:  "Divisive Hierarchical Quantum Clustering with Max-cut"
 author: AJ Rasmusson
 date:   2019-11-13
 mathjax: true
-categories: unsupervised-machine-learning max-cut
 front-image: "assets/images/output_13_0.png"
 source-code: "https://github.com/ajrazander/Unsupervised-QML/blob/master/Max-cut_2%2B_divisive_clustering.ipynb"
-commentary: I'm not 100% sure how to pronounce my own title for this one. It's a mouthful, but the code is something I'm rather proud of. While messing around with max-cut, I wondered if there was a way to do more than simply split a dataset in two (binary classification). Talking about this with some other physics grad students, a friend mentioned hierarchical techniques where you recursively divide the data in half until all the data are in their own clusters (a divisive hierarchy of clusters). If you cleverly stop this process part way, you've effectively turned the binary classifier that is max-cut into a multinary (made up word) classifier! How cool! :D Hope you enjoy this one as much as I did. <strong>PROJECT IDEA:</strong> If one could start with individual data points and slowly build up clusters (agglomerative hierarchy), I imagine that would be more effective since qcs have only a few dozen qubits and the divise method requires loading the entire dataset into the qc at start.
+commentary: |
+    I'm not 100% sure how to pronounce the title for this one XD. It's a mouthful, but the combination of ideas is something I'm rather
+    proud of. The problem with learning with max-cut is the machine can only get learn two clusters out of the dataset: it's a binary classifier.
+    <strong>What if the dataset more naturally separates into 3 or more clusters?!</strong> In talking with some other physics grad students, a friend
+    mentioned hierarchical learning techniques. One such technique is to recursively divide the data until it's all in individual clusters (resulting in a divisive hierarchy of clusters).
+    If you cleverly stop this process part way, you've effectively turned max-cut into a multinary (made up word) classifier! (more on this in the post) How cool! :D
+    <strong>Easily one of my favorite projects</strong>. Hope you enjoy this as much as I did. <strong>PROJECT IDEA:</strong> If one could
+    start with individual data points and slowly build up clusters (agglomerative hierarchy), I imagine that would be a more
+    lenient learning method on today's limited qcs.
+tags: [unsupervised-machine-learning, max-cut, qaoa, advanced]
 ---
+
 
 # 2+ Clustering with Max-cut
 This notebook is an example of unsupervised learning on a quantum computer. The data used are from the iris data set. For faster run time, you will need an [IBMQ account](https://quantum-computing.ibm.com) to use their 32 qubit simulator.
@@ -19,7 +29,6 @@ In the [previous notebook](https://ajrazander.github.io/unsupervised-machine-lea
 One solution is to apply a divisive ("top-down") [hierarchial clustering](https://en.wikipedia.org/wiki/Hierarchical_clustering) method. This algorithm starts with the whole data set (the top) and slowly breaks it up until all data points are individual clusters (the bottom). For QAOA solving max-cut a divisive hierarchical clustering algorithm would execute as follows: (0) solve the max-cut problem on the entire dataset resulting in two child clusters, (1) solve the max-cut problem on each child cluster, repeat (1) until every data point is in an individual cluster.
 
 Let's get to it!
-
 
 ```python
 import numpy as np
@@ -479,7 +488,7 @@ plt.show()
 ```
 
 
-![png](assets/images/output_11_0.png)
+![png](/assets/images/output_11_0.png)
 
 
 Let's traverse the binary tree along the 'heaviest' branches and stop at the number of leaves associated with the elbow rule. Based on the plot above that would be 3 clusters where the 2nd and 3rd clusters are associated with the point (3,~30)
@@ -514,7 +523,7 @@ print(df_sub.groupby(['species']).sum()['final'] / df_sub.groupby(['species']).c
 ```
 
 
-![png](assets/images/output_13_0.png)
+![png](/assets/images/output_13_0.png)
 
 
     "Average" label classification:

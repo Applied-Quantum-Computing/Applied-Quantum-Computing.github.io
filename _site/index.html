@@ -15,7 +15,15 @@
 <script type="application/ld+json">
 {"description":"Quantum algorithms explained, computed, and tutorialized.","@type":"WebSite","headline":"Welcome to Applied Quantum Computation","url":"http://localhost:4000/","name":"Applied Quantum Computation","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
-<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Applied Quantum Computation" /></head>
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Applied Quantum Computation" />
+    
+
+
+
+
+
+  
+</head>
 <body><header class="site-header" role="banner">
 
   <div class="wrapper"><a class="site-title" rel="author" href="/">Applied Quantum Computation</a><nav class="site-nav">
@@ -28,48 +36,83 @@
           </span>
         </label>
 
-        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/beginner/">Beginner</a><a class="page-link" href="/intermediate/">Intermediate</a></div>
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/advanced/">Advanced</a><a class="page-link" href="/beginner/">Beginner</a><a class="page-link" href="/intermediate/">Intermediate</a><a class="page-link" href="/tags/">Tags</a></div>
       </nav></div>
 </header>
 <main class="page-content" aria-label="Content">
+      <div class="title-banner">
+        <h1 id="welcome-to-applied-quantum-computation">Welcome to Applied Quantum Computation</h1>
+<p>Understandable, personable applications in quantum computing.</p>
+
+
+      </div>
+      <!-- 3 column sub banner
+      <div class="row">
+        <a href="./beginner/"><div class="column" style="background-color:#ffc046ff">
+          <h1>Concepts</h1>
+          <small>fundamentals used in quantum algorithms.</small>
+        </div></a>
+        <a href="./intermediate/"><div class="column" style="background-color:#eb921cff">
+          <h1>Introductory Algos</h1>
+          <small>solving problems with fundamentals.</small>
+        </div></a>
+        <a href="./advanced/"><div class="column" style="background-color:#c56000ff">
+          <h1>Advanced Algos</h1>
+          <small>machine learning. error correction. quantum simulation.</small>
+        </div></a>
+      </div>
+      -->
+
+      <br><br>
+
       <div class="wrapper">
-        <div class="home">
+        <div class="home"><h2 class="post-list-heading" align="center">Projects and News</h2>
+        <ul class="post-list"><li>
+            <p class="post-meta">
+              <time class="dt-published" datetime="2019-11-13T00:00:00-05:00" itemprop="datePublished">Nov 13, 2019
+              </time>• <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span class="p-author h-card" itemprop="name">AJ Rasmusson</span></span></p>
+            <h3>
+              <a class="post-link" href="/2019/11/13/Max-cut-2+-Divisive-Clustering.html">
+                Divisive Hierarchical Quantum Clustering with Max-cut
+              </a>
+            </h3>
+            I'm not 100% sure how to pronounce the title for this one XD. It's a mouthful, but the combination of ideas is something I'm rather
+proud of. The problem with learning with max-cut is the machine can only get learn two clusters out of the dataset: it's a binary classifier.
+<strong>What if the dataset more naturally separates into 3 or more clusters?!</strong> In talking with some other physics grad students, a friend
+mentioned hierarchical learning techniques. One such technique is to recursively divide the data until it's all in individual clusters (resulting in a divisive hierarchy of clusters).
+If you cleverly stop this process part way, you've effectively turned max-cut into a multinary (made up word) classifier! (more on this in the post) How cool! :D
+<strong>Easily one of my favorite projects</strong>. Hope you enjoy this as much as I did. <strong>PROJECT IDEA:</strong> If one could
+start with individual data points and slowly build up clusters (agglomerative hierarchy), I imagine that would be a more
+lenient learning method on today's limited qcs.
 
-  <br><br><br><br><br>
-  <h1 id="welcome-to-applied-quantum-computation">Welcome to Applied Quantum Computation</h1>
-<p>Dedicated to personable, understandable tutorials in quantum computing applications.</p>
+            <!--<h1 id="2-clustering-with-max-cut">2+ Clustering with Max-cut</h1>
+<p>This notebook is an example of unsupervised learning on a quantum computer. The data used are from the iris data set. For faster run time, you will need an <a href="https://quantum-computing.ibm.com">IBMQ account</a> to use their 32 qubit simulator.</p>
 
-<p>First time? See the <a href="https://ajrazander.github.io/beginner/">beginners page</a>.</p>
+-->
+            <br>
+            <img src=assets/images/output_13_0.png alt="HTML5 Icon">
+          </li><li>
+            <p class="post-meta">
+              <time class="dt-published" datetime="2019-11-07T00:00:00-05:00" itemprop="datePublished">Nov 7, 2019
+              </time>• <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span class="p-author h-card" itemprop="name">AJ Rasmusson</span></span></p>
+            <h3>
+              <a class="post-link" href="/2019/11/07/Quantum-Max-cut-vs-K-means.html">
+                Quantum Unsupervised Learning with Max-cut
+              </a>
+            </h3>
+            Quantum computing is supposed to enhance AI and machine learning, but this is the first time I've actually seen it in action.
+Most of this project is just me trying to understand how qaoa solving the max-cut problem can be used for machine learning (see details in code).
+The plan is to work through this then play around with it. Hopefully by playing around enough, I could find a way for small
+(< 50 qubit--<a href="https://arxiv.org/abs/1801.00862">NISQ</a> quantum computers to more quickly be powerful learning machines.
+<strong>UPDATE:</strong> If you want to see some of my playing arounds, check out <a href="https://ajrazander.github.io/unsupervised-machine-learning/max-cut/2019/11/13/Max-cut-2+-Divisive-Clustering.html">this other post</a>.
 
-<p>Veteran? Check out some more <a href="https://ajrazander.github.io/intermediate/">advanced projects</a> or scroll down to see the latest projects and updates.</p>
+            <!--<h2 id="unsupervised-learning-with-max-cut">Unsupervised Learning with Max-cut</h2>
+<p>This notebook is an example of unsupervised learning on a quantum computer. The data used are from the iris data set.</p>
 
-<p>Want to contribute? Read how to <a href="https://ajrazander.github.io/about/">contacting us</a>.</p>
-
-  <br><br><br><br><br><h2 class="post-list-heading">Latest Projects</h2>
-    <ul class="post-list"><li><span class="post-meta">Nov 13, 2019</span>
-        <h3>
-          <a class="post-link" href="/unsupervised-machine-learning/max-cut/2019/11/13/Max-cut-2+-Divisive-Clustering.html">
-            Divisive Hierarchical Quantum Clustering with Max-cut
-          </a>
-        </h3>
-        <p class="post-meta"  align="center">
-          <time class="dt-published" datetime="2019-11-13T00:00:00-05:00" itemprop="datePublished">Nov 13, 2019
-          </time>• <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span class="p-author h-card" itemprop="name">AJ Rasmusson</span></span></p>
-        I'm not 100% sure how to pronounce my own title for this one. It's a mouthful, but the code is something I'm rather proud of. While messing around with max-cut, I wondered if there was a way to do more than simply split a dataset in two (binary classification). Talking about this with some other physics grad students, a friend mentioned hierarchical techniques where you recursively divide the data in half until all the data are in their own clusters (a divisive hierarchy of clusters). If you cleverly stop this process part way, you've effectively turned the binary classifier that is max-cut into a multinary (made up word) classifier! How cool! :D Hope you enjoy this one as much as I did. <strong>PROJECT IDEA:</strong> If one could start with individual data points and slowly build up clusters (agglomerative hierarchy), I imagine that would be more effective since qcs have only a few dozen qubits and the divise method requires loading the entire dataset into the qc at start.
-        <br>
-	    <img src=assets/images/output_13_0.png alt="HTML5 Icon"></li><li><span class="post-meta">Nov 7, 2019</span>
-        <h3>
-          <a class="post-link" href="/unsupervised-machine-learning/max-cut/2019/11/07/Quantum-Max-cut-vs-K-means.html">
-            Quantum Unsupervised Learning with Max-cut
-          </a>
-        </h3>
-        <p class="post-meta"  align="center">
-          <time class="dt-published" datetime="2019-11-07T00:00:00-05:00" itemprop="datePublished">Nov 7, 2019
-          </time>• <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span class="p-author h-card" itemprop="name">AJ Rasmusson</span></span></p>
-        Quantum computing is supposed to enhance AI and machine learning, but this is the first time I worked with it myself. Most of this tutorial is from other resources and is really just me trying to understand those resources (see details in code). The plan was to make this tutorial for myself (based on those other tutorials) then tweak it and mess with. Hopefully by messing around enough, I could find a way for small (< 50 qubit--<a href="https://arxiv.org/abs/1801.00862">NISQ</a>) quantum computers to still be powerful learning machines compared with current computers. <strong>UPDATE:</strong> If you want to see some messing around, check out <a href="https://ajrazander.github.io/unsupervised-machine-learning/max-cut/2019/11/13/Max-cut-2+-Divisive-Clustering.html">this other post</a>.
-        <br>
-	    <img src=assets/images/output_17_0.png alt="HTML5 Icon"></li></ul></div>
-
+-->
+            <br>
+            <img src=assets/images/output_17_0.png alt="HTML5 Icon">
+          </li></ul></div>
       </div>
     </main><footer class="site-footer h-card">
   <data class="u-url" href="/"></data>
@@ -84,11 +127,12 @@
           <li class="p-name">Applied Quantum Computation</li><li><a class="u-email" href="mailto:quantumrepeater@gmail.com">quantumrepeater@gmail.com</a></li></ul>
       </div>
 
-      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/applied-quantum-computing"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">applied-quantum-computing</span></a></li><li><a href="https://www.twitter.com/aj_rasmusa"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">aj_rasmusa</span></a></li></ul>
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/applied-quantum-computing"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">applied-quantum-computing</span></a></li></ul>
 </div>
 
       <div class="footer-col footer-col-3">
         <p>Quantum algorithms explained, computed, and tutorialized.</p>
+        <p>Want to contribute? See how to <a href=https://appliedqc.org/about/>contact us<a/>.</p>
       </div>
     </div>
 

@@ -22,9 +22,9 @@ title: Applied Quantum Computation
 email: quantumrepeater@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   Quantum algorithms explained, computed, and tutorialized.
+contact-us: Want to contribute? See how to <a href=https://appliedqc.org/about/>contact us<a/>.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://applied-quantum-computing.github.io" # the base hostname & protocol for your site, e.g. http://example.com
-twitter_username: aj_rasmusa
+url: "https://appliedqc.org" # the base hostname & protocol for your site, e.g. http://example.com
 github_username:  applied-quantum-computing
 
 # Build settings
@@ -35,6 +35,7 @@ plugins:
 
 # Other
 rss: false
+show_excerpts: true
 
 # Exclude from processing.
 # The following items will not be processed, by default.

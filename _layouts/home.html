@@ -5,35 +5,41 @@ layout: default
 <div class="home">
 
   <br><br><br><br><br>
-  {{ content }}
+    {{ content }}
   <br><br><br><br><br>
 
+  {{ page.sections['sub-banner1'] | textilize }}
+  <br>
+  {{ page.sections['sub-banner2'] | textilize }}
+  <br>
+  {{ page.sections['sub-banner3'] | textilize }}
+
   {%- if site.posts.size > 0 -%}
-    <h2 class="post-list-heading">{{ page.list_title | default: "Latest Projects" }}</h2>
+    <h2 class="post-list-heading" align="center">{{ page.list_title | default: "Latest Projects" }}</h2>
     <ul class="post-list">
       {%- for post in site.posts -%}
       <li>
-        {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
-        <span class="post-meta">{{ post.date | date: date_format }}</span>
-        <h3>
-          <a class="post-link" href="{{ post.url | relative_url }}">
-            {{ post.title | escape }}
-          </a>
-        </h3>
-        <p class="post-meta"  align="center">
+        <p class="post-meta">
           <time class="dt-published" datetime="{{ post.date | date_to_xmlschema }}" itemprop="datePublished">
             {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
             {{ post.date | date: date_format }}
           </time>
           {%- if post.author -%}
           • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span class="p-author h-card" itemprop="name">{{ post.author }}</span></span>
-          {%- endif -%}</p>
+          {%- endif -%}
+        </p>
+        <h3>
+          <a class="post-link" href="{{ post.url | relative_url }}">
+            {{ post.title | escape }}
+          </a>
+        </h3>
         {{ post.commentary }}
-        <br>
-	    <img src={{post.front-image}} alt="HTML5 Icon">
-        {%- if site.show_excerpts -%}
+        <!-- {%- if site.show_excerpts -%}
           {{ post.excerpt }}
         {%- endif -%}
+        -->
+        <br>
+	    <img src={{post.front-image}} alt="HTML5 Icon">
       </li>
       {%- endfor -%}
     </ul>

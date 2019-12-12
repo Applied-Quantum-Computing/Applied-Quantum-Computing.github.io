@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: 'en' }}">
+
+  {%- include head.html -%}
+
+  <body>
+
+    {%- include header.html -%}
+
+    <main class="page-content" aria-label="Content">
+      <div class="title-banner">
+        {{ content }}
+      </div>
+      <!-- 3 column sub banner
+      <div class="row">
+        <a href="./beginner/"><div class="column" style="background-color:#ffc046ff">
+          <h1>Concepts</h1>
+          <small>fundamentals used in quantum algorithms.</small>
+        </div></a>
+        <a href="./intermediate/"><div class="column" style="background-color:#eb921cff">
+          <h1>Introductory Algos</h1>
+          <small>solving problems with fundamentals.</small>
+        </div></a>
+        <a href="./advanced/"><div class="column" style="background-color:#c56000ff">
+          <h1>Advanced Algos</h1>
+          <small>machine learning. error correction. quantum simulation.</small>
+        </div></a>
+      </div>
+      -->
+
+      <br><br>
+
+      <div class="wrapper">
+        <div class="home">
+        {%- if site.posts.size > 0 -%}
+        <h2 class="post-list-heading" align="center">{{ page.list_title | default: "Projects and News" }}</h2>
+        <ul class="post-list">
+          {%- for post in site.posts -%}
+          <li>
+            <p class="post-meta">
+              <time class="dt-published" datetime="{{ post.date | date_to_xmlschema }}" itemprop="datePublished">
+                {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+                {{ post.date | date: date_format }}
+              </time>
+              {%- if post.author -%}
+              • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span class="p-author h-card" itemprop="name">{{ post.author }}</span></span>
+              {%- endif -%}
+            </p>
+            <h3>
+              <a class="post-link" href="{{ post.url | relative_url }}">
+                {{ post.title | escape }}
+              </a>
+            </h3>
+            {{ post.commentary }}
+            <!-- {%- if site.show_excerpts -%}
+              {{ post.excerpt }}
+            {%- endif -%}
+            -->
+            <br>
+            <img src={{post.front-image}} alt="HTML5 Icon">
+          </li>
+          {%- endfor -%}
+        </ul>
+        {%- endif -%}
+        </div>
+      </div>
+    </main>
+
+    {%- include footer.html -%}
+
+  </body>
+
+</html>

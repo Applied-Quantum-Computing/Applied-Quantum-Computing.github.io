@@ -49,8 +49,22 @@ pre > code { border: 0; padding-right: 0; padding-left: 0; }
 .wrapper { max-width: -webkit-calc(800px - (30px * 2)); max-width: calc(800px - (30px * 2)); margin-right: auto; margin-left: auto; padding-right: 30px; padding-left: 30px; }
 @media screen and (max-width: 800px) { .wrapper { max-width: -webkit-calc(800px - (30px)); max-width: calc(800px - (30px)); padding-right: 15px; padding-left: 15px; } }
 
+/** Title Banner */
+.title-banner { background-size: cover; background-position: center; background-color: #bbdefbff; text-align: center; padding: 140px 0px 140px 0px; margin: 0px auto 0px auto; }
+
+/** Sub Title Banner
+
+.sub-title-banner { background-size: cover; background-position: center; background-color: #ffc046ff; text-align: center; padding: 40px 0px 40px 0px;
+}
+*/
+/* Create three equal columns that floats next to each other */
+.column { float: left; width: 33.33%; padding: 80px 0px 80px 0px; text-align: center; color: black; }
+
+/* Clear floats after the columns */
+/** Responsive layout - makes the three sub-title banners stack on top of each other instead of next to each other */
+@media screen and (max-width: 500px) { .column { width: 100%; text-align: center; color: black; } }
 /** Clearfix */
-.wrapper:after, .footer-col-wrapper:after { content: ""; display: table; clear: both; }
+.wrapper:after, .row:after, .footer-col-wrapper:after { content: ""; display: table; clear: both; }
 
 /** Icons */
 .svg-icon { width: 16px; height: 16px; display: inline-block; fill: #828282; padding-right: 5px; vertical-align: text-top; }
@@ -105,7 +119,7 @@ table td { border: 1px solid #e8e8e8; }
   .footer-col-3 { width: -webkit-calc(100% - (30px / 2)); width: calc(100% - (30px / 2)); } }
 @media screen and (max-width: 600px) { .footer-col { float: none; width: -webkit-calc(100% - (30px / 2)); width: calc(100% - (30px / 2)); } }
 /** Page content */
-.page-content { padding: 30px 0; flex: 1; }
+.page-content { padding: 0 30px 0 30px 0 30px 0; flex: 1; }
 
 .page-heading { font-size: 32px; }
 
@@ -119,7 +133,7 @@ table td { border: 1px solid #e8e8e8; }
 .post-link { display: block; font-size: 24px; }
 
 /** Posts */
-.post-header { margin-bottom: 30px; }
+.post-header { padding-top: 30px; padding-bottom: 30px; }
 
 .post-title { font-size: 42px; letter-spacing: -1px; line-height: 1; }
 @media screen and (max-width: 800px) { .post-title { font-size: 36px; } }
