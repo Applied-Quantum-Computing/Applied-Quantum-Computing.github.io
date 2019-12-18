@@ -37,6 +37,9 @@ List of to-dos for the website and projects
 ### Projects
 
 * Ideas ([quantum algorithm zoo](https://quantumalgorithmzoo.org) is always a good place to look for new ideas)
+    - Introduction to qiskit
+           - how to work with/run gates
+           - how to work with/run algorithm functions
     - quantum games (intermediate/beginner)
     - Quantum fourier transform (beginner)
     - quantum walk (intermediate)
