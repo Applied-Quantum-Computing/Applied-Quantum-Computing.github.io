@@ -36,6 +36,7 @@ plugins:
 # Other
 rss: false
 show_excerpts: true
+google_analytics: UA-154982078-1
 
 # Exclude from processing.
 # The following items will not be processed, by default.
