@@ -28,12 +28,12 @@
       </div>
       -->
 
-      <br><br>
-
       <div class="wrapper">
         <div class="home">
         {%- if site.posts.size > 0 -%}
+          <br>
         <h2 class="post-list-heading" align="center">{{ page.list_title | default: "Projects and News" }}</h2>
+          <br>
         <ul class="post-list">
           {%- for post in site.posts -%}
           <li>
