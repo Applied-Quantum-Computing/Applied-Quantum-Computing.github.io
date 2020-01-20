@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.5.0 -->
+<title>Theory Basics: the Qubit | Applied Quantum Computation</title>
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="Theory Basics: the Qubit" />
+<meta name="author" content="AJ Rasmusson" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Theory Basics: the Qubit" />
+<meta property="og:description" content="Theory Basics: the Qubit" />
+<link rel="canonical" href="http://localhost:4000/2020/01/20/Theory-Basics-The-Qubit.html" />
+<meta property="og:url" content="http://localhost:4000/2020/01/20/Theory-Basics-The-Qubit.html" />
+<meta property="og:site_name" content="Applied Quantum Computation" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-01-20T00:00:00-05:00" />
+<script type="application/ld+json">
+{"description":"Theory Basics: the Qubit","@type":"BlogPosting","headline":"Theory Basics: the Qubit","dateModified":"2020-01-20T00:00:00-05:00","datePublished":"2020-01-20T00:00:00-05:00","url":"http://localhost:4000/2020/01/20/Theory-Basics-The-Qubit.html","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2020/01/20/Theory-Basics-The-Qubit.html"},"author":{"@type":"Person","name":"AJ Rasmusson"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Applied Quantum Computation" />
+    
+
+
+
+
+
+  
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Applied Quantum Computation</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/tags/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline" align="center">Theory Basics: the Qubit</h1>
+    <p align="center">Source code can be found <a href="https://github.com/Applied-Quantum-Computing/theory-basics/blob/master/The%20Qubit.ipynb">here</a></p>
+    <p>
+    
+      
+      <a href="/tags/#beginner"><code class="highligher-rouge"><nobr>beginner</nobr></code>&nbsp;</a>
+    
+      
+      <a href="/tags/#qubit"><code class="highligher-rouge"><nobr>qubit</nobr></code>&nbsp;</a>
+    
+      
+      <a href="/tags/#theory-basics"><code class="highligher-rouge"><nobr>theory-basics</nobr></code>&nbsp;</a>
+    
+      
+      <a href="/tags/#qiskit"><code class="highligher-rouge"><nobr>qiskit</nobr></code>&nbsp;</a>
+    
+      
+      <a href="/tags/#Hadamard"><code class="highligher-rouge"><nobr>Hadamard</nobr></code>&nbsp;</a>
+    
+      
+      <a href="/tags/#superposition"><code class="highligher-rouge"><nobr>superposition</nobr></code>&nbsp;</a>
+    
+    </p>
+    <p class="post-meta"  align="center">
+      <time class="dt-published" datetime="2020-01-20T00:00:00-05:00" itemprop="datePublished">Jan 20, 2020
+      </time>• <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span class="p-author h-card" itemprop="name">AJ Rasmusson</span></span></p>
+    <p class="post-meta">
+      A no math, all quantum weirdness introduction to the qubit. My hope here is to introduce quantum computing concepts 
+for a high school educated person—no unexplained jargon; no math; and some hands on experience with quantum weirdness.
+As far the post goes, who can't love the qubit? The simplicity of 0's and 1's, yet the mysterious of not following 
+the normal rules. Enjoy.
+
+    </p>
+  </header>
+  <br><br><br>
+  <div class="post-content e-content" itemprop="articleBody">
+    <h1 id="theory-basics-the-qubit">Theory Basics: the Qubit</h1>
+
+<p>This notebook is for beginners! :D Those who are interested in quantum computing but have minimal to no experience. It’s <strong>part one</strong> of the Theory Basics series, which is all about the basics of how quantum computing works. Here, I cover <strong>qubits</strong>—the basic unit of information in quantum computing.</p>
+
+<h4 id="prerequisites">Prerequisites:</h4>
+<ul>
+  <li>Familiar with python (e.g. functions, classes, methods, math operations)</li>
+  <li>Familiar with jupyter notebooks (know how to run and get around a jupyter notebook)</li>
+  <li>Proficient in algebra</li>
+</ul>
+
+<p>If you meet these prereqs, great! :D If not, this notebook may cause confusion or even discourage you from learning more about quantum computing, which is the exact <strong>opposite</strong> of what I intend. I <strong>strongly</strong> encourage you to familiarize yourself with those topics before going on.</p>
+
+<p>Let’s dive in!</p>
+
+<h4 id="qiskit">Qiskit</h4>
+<p>To get started, you’ll need to <a href="https://qiskit.org/documentation/install.html#install">install qiskit</a>. Qiskit is IBM’s open source python library for quantum computing. It has everything you need to execute established quantum algorithms (e.g. QAOA, VQE), make your own algorithms, and use simulated or <strong>real</strong> quantum computers. There are other open source quantum computing libraries out there with access to <strong>real</strong> quantum computers. I prefer qiskit to its ease of access to quantum computers and its large community. I won’t cover the details of qiskit here. If you want to learn more, <strong>definitely</strong> go through their “getting started” <a href="https://github.com/Qiskit/qiskit-iqx-tutorials/blob/master/qiskit/1_start_here.ipynb">tutorials</a>.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># This may take a few seconds
+</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="o">*</span>  <span class="c1"># this imports all of qiskit's sublibraries
+</span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+</code></pre></div></div>
+
+<h1 id="the-qubit">The Qubit</h1>
+
+<p>The <a href="https://www.epiqc.cs.uchicago.edu/1qubit">qubit</a> is a quantum <a href="https://en.wikipedia.org/wiki/Bit">bit</a>. (quantum bit —&gt; qubit? Physics jokes, am I right? XD) A qubit has two distinct <strong>states</strong> 0 and 1—just like it’s classical companion the bit. What distinguishes a qubit from a bit is (obviously) the <strong>quantum</strong> part! The quantum part of a qubit follows different rules than a bit. The rules are called quantum mechanics, and if you’re clever, they <em>can</em> (but not always) lead to <strong>EXPONENTIALLY</strong> faster computation than a computer using bits. Thus, the appeal for making quantum computers.</p>
+
+<h4 id="the-quantum-circuit-with-a-hadamard-gate">The Quantum Circuit (with a Hadamard gate)</h4>
+<p>To work with qubits in qiskit, we start with a <strong>quantum circuit</strong>. The <strong>quantum circuit</strong> as the place <strong>where qubits live</strong> and where you can <strong>manipulate them</strong> (by appling <strong>gates</strong>—more on this later). Let’s make a simple circuit with one qubit and one gate.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Code a Quantum Circuit
+</span>
+<span class="c1"># the argument (1,1) tells qiskit you want 1 qubit ("q_0") and 1 classical bit ("c_0")
+</span><span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1"># this method applies the Hadamard gate to the 0th qubit ("q_0")
+</span><span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="c1"># this method measures the 0th qubit ("q_0") and stores the outcome in the 0th classical bit ("c_0")
+</span><span class="n">circuit</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="c1"># Visualize the constructed circuit
+</span><span class="n">circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</code></pre></div></div>
+
+<pre style="word-wrap: normal;white-space: pre;background: #fff0;line-height: 1.1;font-family: &quot;Courier New&quot;,Courier,monospace">        ┌───┐┌─┐
+q_0: |0&gt;┤ H ├┤M├
+        └───┘└╥┘
+ c_0: 0 ══════╩═
+                </pre>
+
+<p>You just created a quantum computing code. How cool!! :D</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>Let’s take a moment and discuss what happened. We initialized one qubit and one classical bit by calling <code class="language-plaintext highlighter-rouge">QuantumCircuit(1,1)</code>. That’s the “q_0:” and “c_0:” part of the drawing above. In qiskit, all qubits are initialized to 0 represented by the “</td>
+      <td>0&gt;” part of the drawing. Why the need for a classical bit you ask? When the qubit is measured, the result needs to be stored somewhere. The classical bit is where the measurement result is stored. In some experiments you may not need a classical bit to companion every qubit because you don’t intent of measure every qubit. (Sometimes, the qubits and they’re bit companions are referred to as quantum and classical registers.) Next, we manipulated the qubit with a <a href="https://en.wikipedia.org/wiki/Quantum_logic_gate#Hadamard_(H)_gate">Hadamard gate</a>—the box with the “H” in it. Last of all, we have to measure the qubit! Measurement is represented in qiskit by an “M” in a box with double lines going down to the qubit’s companion bit.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Just like any code, after you write it you execute it! Let’s run the circuit on a simulated quantum computer to see what happens.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Execute a Quantum Circuit and View Results
+</span>
+<span class="c1"># Initialize a simulated quantum computer
+</span><span class="n">backend</span> <span class="o">=</span> <span class="n">BasicAer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+<span class="c1"># Execute quantum circuit from the previous cell with a chosen quantum computer "backend" and number of repetitions "shots"
+</span><span class="n">result</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+<span class="c1"># Extract classical bit result
+</span><span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+<span class="c1"># Show counts as histogram
+</span><span class="n">visualization</span><span class="o">.</span><span class="n">plot_histogram</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="/asssets/images/theorybasicsthequbit_img0.png" alt="png" /></p>
+
+<p>The above histogram shows the qubit probability (e.g. .45 meaning 45%) on the vertical axis with the qubit state label (0 or 1) on the horizontal axis.</p>
+
+<p>Knowing the qubit started in the 0 state, can you tell what the Hadamard gate does?</p>
+
+<p>Based on this result, we see it randomly assigns the incoming 0 state to 0 ~50% of the time and 1 the other ~50%. What about when we input the 1 state through the Hadamard gate? To change the 0 state to a 1 state, we use the X or NOT gate. The X gate “nots” the input; since there is only the options of 0 and 1, not-0 is 1 and not-1 is 0. To put a 1 in the Hadamard gate, we’ll first us the X gate then the Hadamard like so…</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Code a Quantum Circuit
+</span>
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># this method applies the X (or NOT) gate to the 0th qubit ("q_0")
+</span><span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</code></pre></div></div>
+
+<pre style="word-wrap: normal;white-space: pre;background: #fff0;line-height: 1.1;font-family: &quot;Courier New&quot;,Courier,monospace">        ┌───┐┌───┐┌─┐
+q_0: |0&gt;┤ X ├┤ H ├┤M├
+        └───┘└───┘└╥┘
+ c_0: 0 ═══════════╩═
+                     </pre>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Execute a Quantum Circuit and View Results
+</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+<span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+<span class="n">visualization</span><span class="o">.</span><span class="n">plot_histogram</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="/asssets/images/theorybasicsthequbit_img1.png" alt="png" /></p>
+
+<p>The Hadamard gate takes in 1 and randomly outputs 0 and 1 with even probability—just like what it did to 0!</p>
+
+<h4 id="two-hadamard-gates">Two Hadamard Gates</h4>
+<p>What if we add a second Hadamard gate? If our guess about what a Hadamard gate does is right, then an incoming qubit in state 0 would be randomly assigned to 0 or 1 by the first Hadamard gate. If a 0 is assigned when it goes into the second Hadamard gate, it will come out 0 or 1 with even probability. If a 1 is assigned when it goes into the second Hadamard gate, we’ll also see a 0 or 1 with even probability. Ultimately, we’d see the same 50% 0 and 50% 1 at the output again. Let’s try it!</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Code a quantum circuit
+</span>
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> 
+<span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># first Hadamard gate
+</span><span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># second Hadamard gate
+</span><span class="n">circuit</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</code></pre></div></div>
+
+<pre style="word-wrap: normal;white-space: pre;background: #fff0;line-height: 1.1;font-family: &quot;Courier New&quot;,Courier,monospace">        ┌───┐┌───┐┌─┐
+q_0: |0&gt;┤ H ├┤ H ├┤M├
+        └───┘└───┘└╥┘
+ c_0: 0 ═══════════╩═
+                     </pre>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Execute a Quantum Circuit and View Results
+</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+<span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+<span class="n">visualization</span><span class="o">.</span><span class="n">plot_histogram</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="/asssets/images/theorybasicsthequbit_img2.png" alt="png" /></p>
+
+<p>100% 0 is <strong>NOT what we expected</strong>. (What if we had input a 1 into the two Hadamard gates? Insert your own code to see what happens.) How is that possible? We should have seen 50% 0 and 50% 1. If a single Hadamard gate randomly assigned the 0 state to 0 or 1, did the second Hadamard know which states were coming from the first Hadamard gate and purposefully counteract the random assignments? But, “purposefully” counteracting is the opposite of random, which is the known behavior of a single Hadamard gate! This is not explainable with normal logic. <strong>Welcome to quantum weirdness.</strong></p>
+
+<p>What if—somehow—there is some mysterious communication between the two gates (as contrived a hypothesis as that is)? If we peak between the two gates, maybe we can see what’s going on. At least, we can make sure the qubit is randomly 0 or 1 after the first gate. We’ll assign the measurement after the first Hadamard gate to classical bit 0 (“c_0”) and the second measurement to classical bit 1 (“c_1”).</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Code a Quantum Circuit
+</span>
+<span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># the argument (1,1) tells qiskit you want 1 qubit and 2 classical bits
+</span><span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># measurement after first Hadamard gate stored in c_0
+</span><span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">measure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># measurement after second Hadamard gate stored in c_1
+</span><span class="n">circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>  <span class="c1"># Visualize the constructed circuit
+</span></code></pre></div></div>
+
+<pre style="word-wrap: normal;white-space: pre;background: #fff0;line-height: 1.1;font-family: &quot;Courier New&quot;,Courier,monospace">        ┌───┐┌─┐┌───┐┌─┐
+q_0: |0&gt;┤ H ├┤M├┤ H ├┤M├
+        └───┘└╥┘└───┘└╥┘
+ c_0: 0 ══════╩═══════╬═
+                      ║ 
+ c_1: 0 ══════════════╩═
+                        </pre>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Execute a Quantum Circuit and View Results
+</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+<span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+<span class="n">visualization</span><span class="o">.</span><span class="n">plot_histogram</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="/asssets/images/theorybasicsthequbit_img3.png" alt="png" /></p>
+
+<p>This is obviously very different from the previous two Hadamard gate circuit, but all we did was “peak” between the gates with a measurement!</p>
+
+<h4 id="untangling-multi-bit-results">Untangling Multi-Bit Results</h4>
+<p>When more than one classical bit is used, the two (or more) are put next together like “00” or “11”. The 0 or 1 in the <strong>far right</strong> digit place is classical bit c_0; the next digit to the left is classical bit c_1. To find the probability of the 0 state in the <strong>first</strong> measurement, we add the probabilities for “00” and “10” because the first digit (on the right) are 0’s. That gives ~50%. To find the probability for the 1 state in the <strong>first</strong> measurement, we add “01” and “11” to get ~50% again! For the <strong>second</strong> measurement we follow the same procedure: “00” + “01” gives ~50% for 0 and “10” + “11” gives ~50% for 1.</p>
+
+<p>Now that we understand how qiskit gives the results, we see the qubit is 50% 0 and 50% 1 after the first Hadamard and 50% 0 and 50% 1 after the second Hadamard! Just what our logical intuition said the behavior <strong>SHOULD</strong> have been. What does this mean for this mysterious double Hadamard behavior? When we didn’t measure between, the output state of the circuit is the same as we started with. If we do measure between the two gates, they act like as their usual individual selves.</p>
+
+<h2 id="superposition">Superposition</h2>
+<p>The conclusion scientists (and you) have come to is that the usual OR logic is not enough to explain the two Hadamard gate behavior. The Hadamard gate must be outputting a state that follows AND logic. A cool word scientists invented for this state is <strong>superposition</strong>. After a Hadamard gate, we say the qubit is in a “superposition of 0 and 1.” You may have heard this state refered to as being 0 and 1, but this is wrong. To say the state is 0 and 1 implies 0 and 1 are not mutually exclusive, but by construction they are mutually exclusive; 0 is not-1 and 1 is not-0. It is a common (or lazy) enough mistake. Rather the superposition state the Hadamard gate output is a completely new state (i.e. the new word superposition) that follows completely new logic.</p>
+
+  </div><a class="u-url" href="/2020/01/20/Theory-Basics-The-Qubit.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Applied Quantum Computation</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Applied Quantum Computation</li><li><a class="u-email" href="mailto:quantumrepeater@gmail.com">quantumrepeater@gmail.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/applied-quantum-computing"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">applied-quantum-computing</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Quantum algorithms explained, computed, and tutorialized.</p>
+        <p>Want to contribute? See how to <a href=https://appliedqc.org/about/>contact us<a/>.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

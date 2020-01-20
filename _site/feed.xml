@@ -1,4 +1,179 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://appliedqc.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://appliedqc.org/" rel="alternate" type="text/html" /><updated>2019-12-23T07:29:08-05:00</updated><id>https://appliedqc.org/feed.xml</id><title type="html">Applied Quantum Computation</title><subtitle>Quantum algorithms explained, computed, and tutorialized.</subtitle><entry><title type="html">Divisive Hierarchical Quantum Clustering with Max-cut</title><link href="https://appliedqc.org/2019/11/13/Max-cut-2+-Divisive-Clustering.html" rel="alternate" type="text/html" title="Divisive Hierarchical Quantum Clustering with Max-cut" /><published>2019-11-13T00:00:00-05:00</published><updated>2019-11-13T00:00:00-05:00</updated><id>https://appliedqc.org/2019/11/13/Max-cut%202+%20Divisive%20Clustering</id><content type="html" xml:base="https://appliedqc.org/2019/11/13/Max-cut-2+-Divisive-Clustering.html">&lt;h1 id=&quot;2-clustering-with-max-cut&quot;&gt;2+ Clustering with Max-cut&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-01-20T13:05:39-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Applied Quantum Computation</title><subtitle>Quantum algorithms explained, computed, and tutorialized.</subtitle><entry><title type="html">Theory Basics: the Qubit</title><link href="http://localhost:4000/2020/01/20/Theory-Basics-The-Qubit.html" rel="alternate" type="text/html" title="Theory Basics: the Qubit" /><published>2020-01-20T00:00:00-05:00</published><updated>2020-01-20T00:00:00-05:00</updated><id>http://localhost:4000/2020/01/20/Theory%20Basics%20The%20Qubit</id><content type="html" xml:base="http://localhost:4000/2020/01/20/Theory-Basics-The-Qubit.html">&lt;h1 id=&quot;theory-basics-the-qubit&quot;&gt;Theory Basics: the Qubit&lt;/h1&gt;
+
+&lt;p&gt;This notebook is for beginners! :D Those who are interested in quantum computing but have minimal to no experience. It’s &lt;strong&gt;part one&lt;/strong&gt; of the Theory Basics series, which is all about the basics of how quantum computing works. Here, I cover &lt;strong&gt;qubits&lt;/strong&gt;—the basic unit of information in quantum computing.&lt;/p&gt;
+
+&lt;h4 id=&quot;prerequisites&quot;&gt;Prerequisites:&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;Familiar with python (e.g. functions, classes, methods, math operations)&lt;/li&gt;
+  &lt;li&gt;Familiar with jupyter notebooks (know how to run and get around a jupyter notebook)&lt;/li&gt;
+  &lt;li&gt;Proficient in algebra&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;If you meet these prereqs, great! :D If not, this notebook may cause confusion or even discourage you from learning more about quantum computing, which is the exact &lt;strong&gt;opposite&lt;/strong&gt; of what I intend. I &lt;strong&gt;strongly&lt;/strong&gt; encourage you to familiarize yourself with those topics before going on.&lt;/p&gt;
+
+&lt;p&gt;Let’s dive in!&lt;/p&gt;
+
+&lt;h4 id=&quot;qiskit&quot;&gt;Qiskit&lt;/h4&gt;
+&lt;p&gt;To get started, you’ll need to &lt;a href=&quot;https://qiskit.org/documentation/install.html#install&quot;&gt;install qiskit&lt;/a&gt;. Qiskit is IBM’s open source python library for quantum computing. It has everything you need to execute established quantum algorithms (e.g. QAOA, VQE), make your own algorithms, and use simulated or &lt;strong&gt;real&lt;/strong&gt; quantum computers. There are other open source quantum computing libraries out there with access to &lt;strong&gt;real&lt;/strong&gt; quantum computers. I prefer qiskit to its ease of access to quantum computers and its large community. I won’t cover the details of qiskit here. If you want to learn more, &lt;strong&gt;definitely&lt;/strong&gt; go through their “getting started” &lt;a href=&quot;https://github.com/Qiskit/qiskit-iqx-tutorials/blob/master/qiskit/1_start_here.ipynb&quot;&gt;tutorials&lt;/a&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# This may take a few seconds
+&lt;/span&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;numpy&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;pandas&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pd&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;qiskit&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;# this imports all of qiskit's sublibraries
+&lt;/span&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plt&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;the-qubit&quot;&gt;The Qubit&lt;/h1&gt;
+
+&lt;p&gt;The &lt;a href=&quot;https://www.epiqc.cs.uchicago.edu/1qubit&quot;&gt;qubit&lt;/a&gt; is a quantum &lt;a href=&quot;https://en.wikipedia.org/wiki/Bit&quot;&gt;bit&lt;/a&gt;. (quantum bit —&amp;gt; qubit? Physics jokes, am I right? XD) A qubit has two distinct &lt;strong&gt;states&lt;/strong&gt; 0 and 1—just like it’s classical companion the bit. What distinguishes a qubit from a bit is (obviously) the &lt;strong&gt;quantum&lt;/strong&gt; part! The quantum part of a qubit follows different rules than a bit. The rules are called quantum mechanics, and if you’re clever, they &lt;em&gt;can&lt;/em&gt; (but not always) lead to &lt;strong&gt;EXPONENTIALLY&lt;/strong&gt; faster computation than a computer using bits. Thus, the appeal for making quantum computers.&lt;/p&gt;
+
+&lt;h4 id=&quot;the-quantum-circuit-with-a-hadamard-gate&quot;&gt;The Quantum Circuit (with a Hadamard gate)&lt;/h4&gt;
+&lt;p&gt;To work with qubits in qiskit, we start with a &lt;strong&gt;quantum circuit&lt;/strong&gt;. The &lt;strong&gt;quantum circuit&lt;/strong&gt; as the place &lt;strong&gt;where qubits live&lt;/strong&gt; and where you can &lt;strong&gt;manipulate them&lt;/strong&gt; (by appling &lt;strong&gt;gates&lt;/strong&gt;—more on this later). Let’s make a simple circuit with one qubit and one gate.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Code a Quantum Circuit
+&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# the argument (1,1) tells qiskit you want 1 qubit (&quot;q_0&quot;) and 1 classical bit (&quot;c_0&quot;)
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;circuit&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;QuantumCircuit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# this method applies the Hadamard gate to the 0th qubit (&quot;q_0&quot;)
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;circuit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# this method measures the 0th qubit (&quot;q_0&quot;) and stores the outcome in the 0th classical bit (&quot;c_0&quot;)
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;circuit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;measure&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# Visualize the constructed circuit
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;circuit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;draw&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;pre style=&quot;word-wrap: normal;white-space: pre;background: #fff0;line-height: 1.1;font-family: &amp;quot;Courier New&amp;quot;,Courier,monospace&quot;&gt;        ┌───┐┌─┐
+q_0: |0&amp;gt;┤ H ├┤M├
+        └───┘└╥┘
+ c_0: 0 ══════╩═
+                &lt;/pre&gt;
+
+&lt;p&gt;You just created a quantum computing code. How cool!! :D&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Let’s take a moment and discuss what happened. We initialized one qubit and one classical bit by calling &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;QuantumCircuit(1,1)&lt;/code&gt;. That’s the “q_0:” and “c_0:” part of the drawing above. In qiskit, all qubits are initialized to 0 represented by the “&lt;/td&gt;
+      &lt;td&gt;0&amp;gt;” part of the drawing. Why the need for a classical bit you ask? When the qubit is measured, the result needs to be stored somewhere. The classical bit is where the measurement result is stored. In some experiments you may not need a classical bit to companion every qubit because you don’t intent of measure every qubit. (Sometimes, the qubits and they’re bit companions are referred to as quantum and classical registers.) Next, we manipulated the qubit with a &lt;a href=&quot;https://en.wikipedia.org/wiki/Quantum_logic_gate#Hadamard_(H)_gate&quot;&gt;Hadamard gate&lt;/a&gt;—the box with the “H” in it. Last of all, we have to measure the qubit! Measurement is represented in qiskit by an “M” in a box with double lines going down to the qubit’s companion bit.&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Just like any code, after you write it you execute it! Let’s run the circuit on a simulated quantum computer to see what happens.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Execute a Quantum Circuit and View Results
+&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# Initialize a simulated quantum computer
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;backend&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BasicAer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get_backend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'qasm_simulator'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# Execute quantum circuit from the previous cell with a chosen quantum computer &quot;backend&quot; and number of repetitions &quot;shots&quot;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;execute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;circuit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;backend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;shots&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# Extract classical bit result
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;counts&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get_counts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;circuit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# Show counts as histogram
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;visualization&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot_histogram&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;counts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/asssets/images/theorybasicsthequbit_img0.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The above histogram shows the qubit probability (e.g. .45 meaning 45%) on the vertical axis with the qubit state label (0 or 1) on the horizontal axis.&lt;/p&gt;
+
+&lt;p&gt;Knowing the qubit started in the 0 state, can you tell what the Hadamard gate does?&lt;/p&gt;
+
+&lt;p&gt;Based on this result, we see it randomly assigns the incoming 0 state to 0 ~50% of the time and 1 the other ~50%. What about when we input the 1 state through the Hadamard gate? To change the 0 state to a 1 state, we use the X or NOT gate. The X gate “nots” the input; since there is only the options of 0 and 1, not-0 is 1 and not-1 is 0. To put a 1 in the Hadamard gate, we’ll first us the X gate then the Hadamard like so…&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Code a Quantum Circuit
+&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;circuit&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;QuantumCircuit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;circuit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;# this method applies the X (or NOT) gate to the 0th qubit (&quot;q_0&quot;)
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;circuit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;circuit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;measure&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;circuit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;draw&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;pre style=&quot;word-wrap: normal;white-space: pre;background: #fff0;line-height: 1.1;font-family: &amp;quot;Courier New&amp;quot;,Courier,monospace&quot;&gt;        ┌───┐┌───┐┌─┐
+q_0: |0&amp;gt;┤ X ├┤ H ├┤M├
+        └───┘└───┘└╥┘
+ c_0: 0 ═══════════╩═
+                     &lt;/pre&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Execute a Quantum Circuit and View Results
+&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;execute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;circuit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;backend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;shots&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;counts&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get_counts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;circuit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;visualization&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot_histogram&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;counts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/asssets/images/theorybasicsthequbit_img1.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The Hadamard gate takes in 1 and randomly outputs 0 and 1 with even probability—just like what it did to 0!&lt;/p&gt;
+
+&lt;h4 id=&quot;two-hadamard-gates&quot;&gt;Two Hadamard Gates&lt;/h4&gt;
+&lt;p&gt;What if we add a second Hadamard gate? If our guess about what a Hadamard gate does is right, then an incoming qubit in state 0 would be randomly assigned to 0 or 1 by the first Hadamard gate. If a 0 is assigned when it goes into the second Hadamard gate, it will come out 0 or 1 with even probability. If a 1 is assigned when it goes into the second Hadamard gate, we’ll also see a 0 or 1 with even probability. Ultimately, we’d see the same 50% 0 and 50% 1 at the output again. Let’s try it!&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Code a quantum circuit
+&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;circuit&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;QuantumCircuit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; 
+&lt;span class=&quot;n&quot;&gt;circuit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;# first Hadamard gate
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;circuit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;# second Hadamard gate
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;circuit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;measure&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;circuit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;draw&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;pre style=&quot;word-wrap: normal;white-space: pre;background: #fff0;line-height: 1.1;font-family: &amp;quot;Courier New&amp;quot;,Courier,monospace&quot;&gt;        ┌───┐┌───┐┌─┐
+q_0: |0&amp;gt;┤ H ├┤ H ├┤M├
+        └───┘└───┘└╥┘
+ c_0: 0 ═══════════╩═
+                     &lt;/pre&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Execute a Quantum Circuit and View Results
+&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;execute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;circuit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;backend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;shots&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;counts&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get_counts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;circuit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;visualization&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot_histogram&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;counts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/asssets/images/theorybasicsthequbit_img2.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;100% 0 is &lt;strong&gt;NOT what we expected&lt;/strong&gt;. (What if we had input a 1 into the two Hadamard gates? Insert your own code to see what happens.) How is that possible? We should have seen 50% 0 and 50% 1. If a single Hadamard gate randomly assigned the 0 state to 0 or 1, did the second Hadamard know which states were coming from the first Hadamard gate and purposefully counteract the random assignments? But, “purposefully” counteracting is the opposite of random, which is the known behavior of a single Hadamard gate! This is not explainable with normal logic. &lt;strong&gt;Welcome to quantum weirdness.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;What if—somehow—there is some mysterious communication between the two gates (as contrived a hypothesis as that is)? If we peak between the two gates, maybe we can see what’s going on. At least, we can make sure the qubit is randomly 0 or 1 after the first gate. We’ll assign the measurement after the first Hadamard gate to classical bit 0 (“c_0”) and the second measurement to classical bit 1 (“c_1”).&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Code a Quantum Circuit
+&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;circuit&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;QuantumCircuit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;# the argument (1,1) tells qiskit you want 1 qubit and 2 classical bits
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;circuit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;circuit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;measure&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;# measurement after first Hadamard gate stored in c_0
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;circuit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;circuit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;measure&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;# measurement after second Hadamard gate stored in c_1
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;circuit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;draw&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;# Visualize the constructed circuit
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;pre style=&quot;word-wrap: normal;white-space: pre;background: #fff0;line-height: 1.1;font-family: &amp;quot;Courier New&amp;quot;,Courier,monospace&quot;&gt;        ┌───┐┌─┐┌───┐┌─┐
+q_0: |0&amp;gt;┤ H ├┤M├┤ H ├┤M├
+        └───┘└╥┘└───┘└╥┘
+ c_0: 0 ══════╩═══════╬═
+                      ║ 
+ c_1: 0 ══════════════╩═
+                        &lt;/pre&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Execute a Quantum Circuit and View Results
+&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;execute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;circuit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;backend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;shots&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;counts&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get_counts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;circuit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;visualization&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot_histogram&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;counts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/asssets/images/theorybasicsthequbit_img3.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This is obviously very different from the previous two Hadamard gate circuit, but all we did was “peak” between the gates with a measurement!&lt;/p&gt;
+
+&lt;h4 id=&quot;untangling-multi-bit-results&quot;&gt;Untangling Multi-Bit Results&lt;/h4&gt;
+&lt;p&gt;When more than one classical bit is used, the two (or more) are put next together like “00” or “11”. The 0 or 1 in the &lt;strong&gt;far right&lt;/strong&gt; digit place is classical bit c_0; the next digit to the left is classical bit c_1. To find the probability of the 0 state in the &lt;strong&gt;first&lt;/strong&gt; measurement, we add the probabilities for “00” and “10” because the first digit (on the right) are 0’s. That gives ~50%. To find the probability for the 1 state in the &lt;strong&gt;first&lt;/strong&gt; measurement, we add “01” and “11” to get ~50% again! For the &lt;strong&gt;second&lt;/strong&gt; measurement we follow the same procedure: “00” + “01” gives ~50% for 0 and “10” + “11” gives ~50% for 1.&lt;/p&gt;
+
+&lt;p&gt;Now that we understand how qiskit gives the results, we see the qubit is 50% 0 and 50% 1 after the first Hadamard and 50% 0 and 50% 1 after the second Hadamard! Just what our logical intuition said the behavior &lt;strong&gt;SHOULD&lt;/strong&gt; have been. What does this mean for this mysterious double Hadamard behavior? When we didn’t measure between, the output state of the circuit is the same as we started with. If we do measure between the two gates, they act like as their usual individual selves.&lt;/p&gt;
+
+&lt;h2 id=&quot;superposition&quot;&gt;Superposition&lt;/h2&gt;
+&lt;p&gt;The conclusion scientists (and you) have come to is that the usual OR logic is not enough to explain the two Hadamard gate behavior. The Hadamard gate must be outputting a state that follows AND logic. A cool word scientists invented for this state is &lt;strong&gt;superposition&lt;/strong&gt;. After a Hadamard gate, we say the qubit is in a “superposition of 0 and 1.” You may have heard this state refered to as being 0 and 1, but this is wrong. To say the state is 0 and 1 implies 0 and 1 are not mutually exclusive, but by construction they are mutually exclusive; 0 is not-1 and 1 is not-0. It is a common (or lazy) enough mistake. Rather the superposition state the Hadamard gate output is a completely new state (i.e. the new word superposition) that follows completely new logic.&lt;/p&gt;</content><author><name>AJ Rasmusson</name></author><category term="beginner" /><category term="qubit" /><category term="theory-basics" /><category term="qiskit" /><category term="Hadamard" /><category term="superposition" /><summary type="html">Theory Basics: the Qubit</summary></entry><entry><title type="html">Divisive Hierarchical Quantum Clustering with Max-cut</title><link href="http://localhost:4000/2019/11/13/Max-cut-2+-Divisive-Clustering.html" rel="alternate" type="text/html" title="Divisive Hierarchical Quantum Clustering with Max-cut" /><published>2019-11-13T00:00:00-05:00</published><updated>2019-11-13T00:00:00-05:00</updated><id>http://localhost:4000/2019/11/13/Max-cut%202+%20Divisive%20Clustering</id><content type="html" xml:base="http://localhost:4000/2019/11/13/Max-cut-2+-Divisive-Clustering.html">&lt;h1 id=&quot;2-clustering-with-max-cut&quot;&gt;2+ Clustering with Max-cut&lt;/h1&gt;
 &lt;p&gt;This notebook is an example of unsupervised learning on a quantum computer. The data used are from the iris data set. For faster run time, you will need an &lt;a href=&quot;https://quantum-computing.ibm.com&quot;&gt;IBMQ account&lt;/a&gt; to use their 32 qubit simulator.&lt;/p&gt;
 
 &lt;p&gt;In the &lt;a href=&quot;https://ajrazander.github.io/unsupervised-machine-learning/max-cut/2019/11/07/Quantum-Max-cut-vs-K-means.html&quot;&gt;previous notebook&lt;/a&gt;, the max-cut problem was solved using QAOA, which gave a quantum speed up to unsupervised learning. Solving the max-cut problem is effectively a binary classifier. In this notebook, we focus on techniques that allow a binary classifier to cluster data into 2+ groups. To summarize this idea with a single question: How can a binary classifier, like QAOA solving the max-cut problem, be used to cluster data into more than 2 clusters?&lt;/p&gt;
@@ -483,7 +658,7 @@ virginica     3.0
 Name: final, dtype: float64
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;The ‘Average’ label classification is the average cluster label (1, 2, or 3) for each species. Setosa is all in cluster 1; versicolor is all in cluster 2; and virginica is all in cluster 3. The divisive hierarchical quantum clustering did a great job!&lt;/p&gt;</content><author><name>AJ Rasmusson</name></author><category term="unsupervised-machine-learning" /><category term="max-cut" /><category term="qaoa" /><category term="advanced" /><summary type="html">2+ Clustering with Max-cut This notebook is an example of unsupervised learning on a quantum computer. The data used are from the iris data set. For faster run time, you will need an IBMQ account to use their 32 qubit simulator.</summary></entry><entry><title type="html">Quantum Unsupervised Learning with Max-cut</title><link href="https://appliedqc.org/2019/11/07/Quantum-Max-cut-vs-K-means.html" rel="alternate" type="text/html" title="Quantum Unsupervised Learning with Max-cut" /><published>2019-11-07T00:00:00-05:00</published><updated>2019-11-07T00:00:00-05:00</updated><id>https://appliedqc.org/2019/11/07/Quantum%20Max-cut%20vs%20K-means</id><content type="html" xml:base="https://appliedqc.org/2019/11/07/Quantum-Max-cut-vs-K-means.html">&lt;h2 id=&quot;unsupervised-learning-with-max-cut&quot;&gt;Unsupervised Learning with Max-cut&lt;/h2&gt;
+&lt;p&gt;The ‘Average’ label classification is the average cluster label (1, 2, or 3) for each species. Setosa is all in cluster 1; versicolor is all in cluster 2; and virginica is all in cluster 3. The divisive hierarchical quantum clustering did a great job!&lt;/p&gt;</content><author><name>AJ Rasmusson</name></author><category term="unsupervised-machine-learning" /><category term="max-cut" /><category term="qaoa" /><category term="advanced" /><summary type="html">2+ Clustering with Max-cut This notebook is an example of unsupervised learning on a quantum computer. The data used are from the iris data set. For faster run time, you will need an IBMQ account to use their 32 qubit simulator.</summary></entry><entry><title type="html">Quantum Unsupervised Learning with Max-cut</title><link href="http://localhost:4000/2019/11/07/Quantum-Max-cut-vs-K-means.html" rel="alternate" type="text/html" title="Quantum Unsupervised Learning with Max-cut" /><published>2019-11-07T00:00:00-05:00</published><updated>2019-11-07T00:00:00-05:00</updated><id>http://localhost:4000/2019/11/07/Quantum%20Max-cut%20vs%20K-means</id><content type="html" xml:base="http://localhost:4000/2019/11/07/Quantum-Max-cut-vs-K-means.html">&lt;h2 id=&quot;unsupervised-learning-with-max-cut&quot;&gt;Unsupervised Learning with Max-cut&lt;/h2&gt;
 &lt;p&gt;This notebook is an example of unsupervised learning on a quantum computer. The data used are from the iris data set.&lt;/p&gt;
 
 &lt;p&gt;Both classical and quantum methods are used to classify the iris dataset. First, the classical k-means clustering algorithm is walked through. Second, the max-cut problem is mapped to an Ising Hamiltonian and solved using QAOA. This &lt;a href=&quot;https://www.kaggle.com/efeergun96/unsupervised-learning-on-iris&quot;&gt;kaggle tutorial&lt;/a&gt; on k-means, this &lt;a href=&quot;https://github.com/qiskit-community/qiskit-qcgpu-provider/blob/master/examples/aqua/Max-Cut.ipynb&quot;&gt;qiskit tutorial&lt;/a&gt; on max-cut, and the paper &lt;a href=&quot;https://arxiv.org/abs/1712.05771&quot;&gt;&lt;em&gt;Unsupervised Machine Learning on a Hybrid Quantum Computer&lt;/em&gt;&lt;/a&gt; were helpful aids in constructing this notebook and make for interesting reading.&lt;/p&gt;
