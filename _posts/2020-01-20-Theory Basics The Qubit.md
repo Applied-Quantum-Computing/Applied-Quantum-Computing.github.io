@@ -10,7 +10,7 @@ source-code: "https://github.com/Applied-Quantum-Computing/theory-basics/blob/ma
 commentary: |
     A no math, all quantum weirdness introduction to the qubit. My hope here is to introduce quantum computing concepts 
     for a high school educated person—no unexplained jargon; no math; and some hands on experience with quantum weirdness.
-    As far the post goes, who can't love the qubit? The simplicity of 0's and 1's, yet the mystery of not following 
+    As far the post goes, who can't love the qubit? The simplicity of 0 and 1, yet the mystery of not following 
     the normal rules. Enjoy.
 tags: [beginner, qubit, theory-basics, qiskit, hadamard, superposition]
 ---
