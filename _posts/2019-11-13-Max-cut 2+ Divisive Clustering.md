@@ -8,7 +8,7 @@ mathjax: true
 front-image: "assets/images/output_13_0.png"
 source-code: "https://github.com/ajrazander/Unsupervised-QML/blob/master/Max-cut_2%2B_divisive_clustering.ipynb"
 commentary: |
-    I'm not 100% sure how to pronounce the title for this one XD. It's a mouthful, but the combination of ideas is something I'm rather
+    Yes, the title is a mouthful, but the combination of ideas is something I'm rather
     proud of. The problem with learning with max-cut is the machine can only get learn two clusters out of the dataset: it's a binary classifier.
     <strong>What if the dataset more naturally separates into 3 or more clusters?!</strong> In talking with some other physics grad students, a friend
     mentioned hierarchical learning techniques. One such technique is to recursively divide the data until it's all in individual clusters (resulting in a divisive hierarchy of clusters).

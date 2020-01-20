@@ -8,6 +8,8 @@ permalink: /todo/
 List of to-dos for the website and projects
 
 ### Website
+Organize content like a course as well as chronological.
+
 * Project organization
     - change beginner, intermediate, and advanced titles to descriptive of the content
 * Post tags
