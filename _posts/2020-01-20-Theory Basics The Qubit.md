@@ -74,7 +74,7 @@ q_0: |0>┤ H ├┤M├
 
 You just created a quantum computing code. How cool!! :D
 
-Let's take a moment to decompose the quantum circuit with a picture and some explanation.
+Let's take a moment to zoom in and decompose that quantum circuit with a picture and some explanations.
 
 ![png](/assets/images/theorybasicsquantumcircuit.png)
 
