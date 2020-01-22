@@ -74,7 +74,11 @@ q_0: |0>┤ H ├┤M├
 
 You just created a quantum computing code. How cool!! :D
 
-Let's take a moment and discuss what happened. We initialized one qubit and one classical bit by calling ```QuantumCircuit(1,1)```. That's the "q_0:" and "c_0:" part of the drawing above. In qiskit, all qubits are initialized to 0 represented by the "\|0>" part of the drawing. Why the need for a classical bit you ask? When the qubit is measured, the result needs to be stored somewhere. The classical bit is where the measurement result is stored. In some experiments you may not need a classical bit to companion every qubit because you don't intent of measure every qubit. (Sometimes, the qubits and they're bit companions are referred to as quantum and classical registers.) Next, we manipulated the qubit with a [Hadamard gate](https://en.wikipedia.org/wiki/Quantum_logic_gate#Hadamard_(H)_gate)—the box with the "H" in it. Last of all, we have to measure the qubit! Measurement is represented in qiskit by an "M" in a box with double lines going down to the qubit's companion bit.
+Let's take a moment to decompose the quantum circuit with a picture and some explanation.
+
+![png](/assets/images/theorybasicsquantumcircuit.png)
+
+We initialized one qubit and one classical bit by calling ```QuantumCircuit(1,1)```. That's the "q_0:" and "c_0:" part of the drawing above. In qiskit, all qubits are initialized to 0 represented by the "\|0>" part of the drawing. Why the need for a classical bit you ask? When the qubit is measured, the result needs to be stored somewhere. The classical bit is where the measurement result is stored. In some experiments you may not need a classical bit to companion every qubit because you don't intent of measure every qubit. (Sometimes, the qubits and they're bit companions are referred to as quantum and classical registers.) Next, we manipulated the qubit with a [Hadamard gate](https://en.wikipedia.org/wiki/Quantum_logic_gate#Hadamard_(H)_gate)—the box with the "H" in it. Last of all, we have to measure the qubit! Measurement is represented in qiskit by an "M" in a box with double lines going down to the qubit's companion bit.
 
 Just like any code, after you write it you execute it! Let's run the circuit on a simulated quantum computer to see what happens.
 
