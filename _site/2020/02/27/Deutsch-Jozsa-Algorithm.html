@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Deutsch-Jozsa Algorithm: 1st Exponential Quantum Speedup | Applied Quantum Computation</title>
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="Deutsch-Jozsa Algorithm: 1st Exponential Quantum Speedup" />
+<meta name="author" content="AJ Rasmusson" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Deutsch-Jozsa Algorithm" />
+<meta property="og:description" content="Deutsch-Jozsa Algorithm" />
+<link rel="canonical" href="http://localhost:4000/2020/02/27/Deutsch-Jozsa-Algorithm.html" />
+<meta property="og:url" content="http://localhost:4000/2020/02/27/Deutsch-Jozsa-Algorithm.html" />
+<meta property="og:site_name" content="Applied Quantum Computation" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-02-27T00:00:00-05:00" />
+<script type="application/ld+json">
+{"headline":"Deutsch-Jozsa Algorithm: 1st Exponential Quantum Speedup","description":"Deutsch-Jozsa Algorithm","dateModified":"2020-02-27T00:00:00-05:00","datePublished":"2020-02-27T00:00:00-05:00","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2020/02/27/Deutsch-Jozsa-Algorithm.html"},"url":"http://localhost:4000/2020/02/27/Deutsch-Jozsa-Algorithm.html","author":{"@type":"Person","name":"AJ Rasmusson"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Applied Quantum Computation" />
+    
+
+
+
+
+
+  
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Applied Quantum Computation</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/tags/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline" align="center">Deutsch-Jozsa Algorithm: 1st Exponential Quantum Speedup</h1>
+    <p align="center">Source code can be found <a href="https://github.com/ajrazander/algorithms/blob/master/Deutsch-Jozsa.ipynb">here</a></p>
+    <p>
+    
+      
+      <a href="/tags/#deutsch"><code class="highligher-rouge"><nobr>deutsch</nobr></code>&nbsp;</a>
+    
+      
+      <a href="/tags/#deutsch-jozsa"><code class="highligher-rouge"><nobr>deutsch-jozsa</nobr></code>&nbsp;</a>
+    
+      
+      <a href="/tags/#exponential-speedup"><code class="highligher-rouge"><nobr>exponential-speedup</nobr></code>&nbsp;</a>
+    
+      
+      <a href="/tags/#algorithm"><code class="highligher-rouge"><nobr>algorithm</nobr></code>&nbsp;</a>
+    
+    </p>
+    <p class="post-meta"  align="center">
+      <time class="dt-published" datetime="2020-02-27T00:00:00-05:00" itemprop="datePublished">Feb 27, 2020
+      </time>• <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span class="p-author h-card" itemprop="name">AJ Rasmusson</span></span></p>
+    <p class="post-meta">
+      The Deutsch and Deutsch-Jozsa algorithms are so cool because they show just how incredible quantum computing can be. They are the first quantum algorithms to solve a problem <strong>EXPONENTIALLY faster</strong> than a classical computer. Though it doesn't solve a problem that's useful haha, they still demonstrate quantum computing has great potential and other exponentially faster algorithms—for interesting problems—are out there. Exponentially faster is one of those things that my mind can't grasp; like the age of the universe, how far the sun is from Earth, or a million Reese cups. My mind throws an overflow error, and I just think, "that's a lot." Enjoy.
+
+    </p>
+  </header>
+  <br><br><br>
+  <div class="post-content e-content" itemprop="articleBody">
+    <h1 id="deutsch-jozsa-algorithm">Deutsch-Jozsa Algorithm</h1>
+
+<p>Deutsch’s algorithm, which was later generalized to the Deutsch-Josza algorithm, was the first quantum algorithm with an exponential speed-up compared to any classical algorithm. Though the problem itself hasn’t found any usefulness, it also showed that a quantum computer can answer a question <strong>WAY faster</strong> than any normal computer and with 100% probability of getting the right answer (excluding noise). It also inspired Simon’s algorithm which in turn inspired Shor’s algorithm.</p>
+
+<h4 id="prerequisites">Prerequisites:</h4>
+<ul>
+  <li><a href="https://appliedqc.org/2020/01/20/Theory-Basics-The-Qubit.html">Theory Basics: the Qubit</a></li>
+  <li>Familiar with superposition</li>
+  <li>Familiar with X, and CNOT gates</li>
+  <li>Familiar with binary</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># This may take a few seconds
+</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="o">*</span>
+</code></pre></div></div>
+
+<h2 id="deutschs-problem">Deutsch’s Problem</h2>
+<p>We’ll first start with Deutsch’s original algorithm. The problem it answered goes like this. Given an unknown binary function $f(x)$ (aka black box or oracle) that maps one bit to another bit, $f(x):{0,1} \rightarrow{0,1}$, determine if $f(x)$ is constant or balanced. A constant function means $f(0)=f(1)$ while a balanced function means $f(0)\neq f(1)$ (since we’re only considering binary input and output). For one input qubit and one output qubit, there are only four unique binary functions. Let’s name them $f_0,f_1,f_2, \text{and} f_3$ and tabulate their possible outputs.</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{array}{c|c|c}
+  & x=0 & x=1 \\\hline
+  f_0(x)= & 0 & 0 \\\hline
+  f_1(x)= & 0 & 1 \\\hline
+  f_2(x)= & 1 & 0 \\\hline
+  f_3(x)= & 1 & 1 \\
+\end{array} %]]></script>
+
+<p>From this table, we see $f_0$ and $f_3$ are constant functions while $f_1$ and $f_2$ are balanced functions. Now, let’s say a friend randomly picks one of these functions but hides its identity from us calling it simply $f(x)$. Our friend implements the randomly chosen $f(x)$ as a unitary (probability conserving) operation $U_f$ that spans the input (q_0) and output (q_1) qubits like so…</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">qiskit</span><span class="o">.</span><span class="n">circuit</span><span class="o">.</span><span class="n">Gate</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'U_f'</span><span class="p">,</span> <span class="n">num_qubits</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">[]),</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</code></pre></div></div>
+
+<pre style="word-wrap: normal;white-space: pre;background: #fff0;line-height: 1.1;font-family: &quot;Courier New&quot;,Courier,monospace">        ┌──────┐
+q_0: |0&gt;┤0     ├
+        │  U_f │
+q_1: |0&gt;┤1     ├
+        └──────┘
+ c_0: 0 ════════
+                </pre>
+
+<p>How do we determine the behavior of $f(x)$? If you have a quantum computer, we use Deutsch’s algorithm of course!</p>
+
+<h2 id="deutschs-algorithm">Deutsch’s Algorithm</h2>
+<p>The classical approach would be to try a lot of inputs and wait until we measure different outputs or until we’ve tried more than half of all possible inputs. In the worse case scenario, we’d need to try half of all possible input states then one more to break the tie between balanced or constant.</p>
+
+<p>The quantum approach (1) makes a superposition of all possible inputs, (2) applies $f(x)$ through the $U_f$ operation to all possible inputs, and (3) interferes the possibilities such that a 0 measured on the input qubit (q_0) means $f(x)$ is constant and 1 means $f(x)$ is balanced.</p>
+
+<p>Let’s do it!</p>
+
+<p>To makes a superposition of all possible inputs, we apply a Hadamard (H) to the input qubit (q_0). To get the right interference later on, the output qubit (q_1) needs to be a 1 before the H gate, so it will get gates X then H. We apply the mystery function $f(x)$ as a unitary operation $U_f$ on the qubits. To complete the interference, every qubit gets an H after $U_f$. Then we measure the input qubits. Ironically, to answer information about the function, we don’t need to measure it’s output! Our circuit will look something like this..
+<img src="Deutsch_algo.png" alt="png" /></p>
+
+<p>On Qiskit, we get this, but add barriers around $U_f$ to help us remember where $U_f$ is when we do examples later on.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">qiskit</span><span class="o">.</span><span class="n">circuit</span><span class="o">.</span><span class="n">Gate</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'U_f'</span><span class="p">,</span> <span class="n">num_qubits</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">[]),</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># Visualize the constructed circuit
+</span><span class="n">circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</code></pre></div></div>
+
+<pre style="word-wrap: normal;white-space: pre;background: #fff0;line-height: 1.1;font-family: &quot;Courier New&quot;,Courier,monospace">        ┌───┐      ░ ┌──────┐ ░ ┌───┐┌─┐
+q_0: |0&gt;┤ H ├──────░─┤0     ├─░─┤ H ├┤M├
+        ├───┤┌───┐ ░ │  U_f │ ░ ├───┤└╥┘
+q_1: |0&gt;┤ X ├┤ H ├─░─┤1     ├─░─┤ H ├─╫─
+        └───┘└───┘ ░ └──────┘ ░ └───┘ ║ 
+ c_0: 0 ══════════════════════════════╩═
+                                        </pre>
+
+<h3 id="examples-of-u_f-u_f_0">Examples of $U_f$: $U_{f_0}$</h3>
+<p>For sake of experimenting, let’s pick some $U_f$s and see if the algorithm works! The simplest $U_f$ is nothing. This would correspond to a constant function; no matter what state we make q_0 (the input qubit), q_1 (the output qubit) will always be 0. Remember, for a constant function q_0 should always be in the 0 state.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Constant U_f. Deutsch's algorithm should give a 0 on q_0
+</span><span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="n">circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</code></pre></div></div>
+
+<pre style="word-wrap: normal;white-space: pre;background: #fff0;line-height: 1.1;font-family: &quot;Courier New&quot;,Courier,monospace">        ┌───┐      ░  ░ ┌───┐┌─┐
+q_0: |0&gt;┤ H ├──────░──░─┤ H ├┤M├
+        ├───┤┌───┐ ░  ░ ├───┤└╥┘
+q_1: |0&gt;┤ X ├┤ H ├─░──░─┤ H ├─╫─
+        └───┘└───┘ ░  ░ └───┘ ║ 
+ c_0: 0 ══════════════════════╩═
+                                </pre>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Execute quantum circuit and view results
+</span><span class="n">backend_sim</span> <span class="o">=</span> <span class="n">BasicAer</span><span class="o">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+<span class="n">sim_shots</span> <span class="o">=</span> <span class="mi">10000</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">backend_sim</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">sim_shots</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+<span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+<span class="n">visualization</span><span class="o">.</span><span class="n">plot_histogram</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/output_8_0.png" alt="png" /></p>
+
+<p>Ta-da! The histogram shows 0 with 100% probability! For one qubit input and one qubit output, there are four unique $U_f$s . Let’s run through the other three!</p>
+
+<h3 id="examples-of-u_f-u_f_1">Examples of $U_f$: $U_{f_1}$</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Balanced U_f. Deutsch's algorithm should give a 1 on q_0
+</span><span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="n">circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</code></pre></div></div>
+
+<pre style="word-wrap: normal;white-space: pre;background: #fff0;line-height: 1.1;font-family: &quot;Courier New&quot;,Courier,monospace">        ┌───┐      ░       ░ ┌───┐┌─┐
+q_0: |0&gt;┤ H ├──────░───■───░─┤ H ├┤M├
+        ├───┤┌───┐ ░ ┌─┴─┐ ░ ├───┤└╥┘
+q_1: |0&gt;┤ X ├┤ H ├─░─┤ X ├─░─┤ H ├─╫─
+        └───┘└───┘ ░ └───┘ ░ └───┘ ║ 
+ c_0: 0 ═══════════════════════════╩═
+                                     </pre>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Execute quantum circuit and view results
+</span><span class="n">result</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">backend_sim</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">sim_shots</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+<span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+<span class="n">visualization</span><span class="o">.</span><span class="n">plot_histogram</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/output_11_0.png" alt="png" /></p>
+
+<h3 id="examples-of-u_f-u_f_2">Examples of $U_f$: $U_{f_2}$</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Balanced U_f. Deutsch's algorithm should give a 1 on q_0
+</span><span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="n">circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</code></pre></div></div>
+
+<pre style="word-wrap: normal;white-space: pre;background: #fff0;line-height: 1.1;font-family: &quot;Courier New&quot;,Courier,monospace">        ┌───┐      ░            ░ ┌───┐┌─┐
+q_0: |0&gt;┤ H ├──────░────────■───░─┤ H ├┤M├
+        ├───┤┌───┐ ░ ┌───┐┌─┴─┐ ░ ├───┤└╥┘
+q_1: |0&gt;┤ X ├┤ H ├─░─┤ X ├┤ X ├─░─┤ H ├─╫─
+        └───┘└───┘ ░ └───┘└───┘ ░ └───┘ ║ 
+ c_0: 0 ════════════════════════════════╩═
+                                          </pre>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Execute quantum circuit and view results
+</span><span class="n">result</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">backend_sim</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">sim_shots</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+<span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+<span class="n">visualization</span><span class="o">.</span><span class="n">plot_histogram</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/output_14_0.png" alt="png" /></p>
+
+<h3 id="examples-of-u_f-u_f_3">Examples of $U_f$: $U_{f_3}$</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Constant U_f. Deutsch's algorithm should give a 0 on q_0
+</span><span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="n">circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</code></pre></div></div>
+
+<pre style="word-wrap: normal;white-space: pre;background: #fff0;line-height: 1.1;font-family: &quot;Courier New&quot;,Courier,monospace">        ┌───┐      ░       ░ ┌───┐┌─┐
+q_0: |0&gt;┤ H ├──────░───────░─┤ H ├┤M├
+        ├───┤┌───┐ ░ ┌───┐ ░ ├───┤└╥┘
+q_1: |0&gt;┤ X ├┤ H ├─░─┤ X ├─░─┤ H ├─╫─
+        └───┘└───┘ ░ └───┘ ░ └───┘ ║ 
+ c_0: 0 ═══════════════════════════╩═
+                                     </pre>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Execute quantum circuit and view results
+</span><span class="n">result</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">backend_sim</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">sim_shots</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+<span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+<span class="n">visualization</span><span class="o">.</span><span class="n">plot_histogram</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/output_17_0.png" alt="png" /></p>
+
+<h3 id="examples-of-u_f-u_f_1-on-a-real-quantum-computer">Examples of $U_f$: $U_{f_1}$ on a real quantum computer</h3>
+<p>Of course, we should also runs these on a <strong>real quantum computer</strong>. I’ll pick $U_{f_1}$ which is a balanced function. You will need to have an <a href="https://quantum-computing.ibm.com">IBM Q Experience account</a> to do this.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Filter backends to find the least busy 5 qubit quantum computer and check current "pending_jobs"
+</span><span class="kn">from</span> <span class="nn">qiskit.providers.ibmq</span> <span class="kn">import</span> <span class="n">least_busy</span>
+
+<span class="n">IBMQ</span><span class="o">.</span><span class="n">load_account</span><span class="p">()</span> <span class="c1"># Load account from disk
+</span><span class="n">provider</span> <span class="o">=</span> <span class="n">IBMQ</span><span class="o">.</span><span class="n">get_provider</span><span class="p">(</span><span class="n">hub</span><span class="o">=</span><span class="s">'ibm-q'</span><span class="p">)</span>
+<span class="n">smaller_qcs</span> <span class="o">=</span> <span class="n">provider</span><span class="o">.</span><span class="n">backends</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">configuration</span><span class="p">()</span><span class="o">.</span><span class="n">n_qubits</span> <span class="o">==</span> <span class="mi">5</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">x</span><span class="o">.</span><span class="n">configuration</span><span class="p">()</span><span class="o">.</span><span class="n">simulator</span><span class="p">)</span>
+<span class="n">backend_real</span> <span class="o">=</span> <span class="n">least_busy</span><span class="p">(</span><span class="n">smaller_qcs</span><span class="p">)</span>
+<span class="n">max_real_shots</span> <span class="o">=</span> <span class="mi">8192</span>
+
+<span class="c1"># Check status and "pending_jobs" to see how long it might take to run
+</span><span class="n">backend_real</span><span class="o">.</span><span class="n">status</span><span class="p">()</span>
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>BackendStatus(backend_name='ibmq_burlington', backend_version='1.1.4', operational=True, pending_jobs=7, status_msg='active')
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="c1"># Visualize circuit
+</span><span class="n">circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</code></pre></div></div>
+
+<pre style="word-wrap: normal;white-space: pre;background: #fff0;line-height: 1.1;font-family: &quot;Courier New&quot;,Courier,monospace">        ┌───┐      ░       ░ ┌───┐┌─┐
+q_0: |0&gt;┤ H ├──────░───■───░─┤ H ├┤M├
+        ├───┤┌───┐ ░ ┌─┴─┐ ░ ├───┤└╥┘
+q_1: |0&gt;┤ X ├┤ H ├─░─┤ X ├─░─┤ H ├─╫─
+        └───┘└───┘ ░ └───┘ ░ └───┘ ║ 
+ c_0: 0 ═══════════════════════════╩═
+                                     </pre>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Execute quantum circuit and view results on a real quantum computer. max shots = 8192.
+</span><span class="n">result</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">backend_real</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">max_real_shots</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+<span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+<span class="n">visualization</span><span class="o">.</span><span class="n">plot_histogram</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/output_21_0.png" alt="png" /></p>
+
+<p>Deutsch’s algorithm <strong>guarantees</strong> q_0 will be 1 at the output for a balanced $U_f$, but that’s not what we just measured! There’s ~30% of a 0 state. What happened?? Well, the quantum computer isn’t perfectly quantum all the time: electrical noise in executing the gates, the temperature of the superconducting chips, vibrations, etc. etc. all work toward making these qubits no longer “quantum” and reduces it’s efficiency at computing quantum algorithms.</p>
+
+<h2 id="deutsch-jozsa-problem-and-algorithm">Deutsch-Jozsa Problem (and algorithm)</h2>
+<p>The extension from Deutsch to Deutsch-Jozsa is straight forward. We simply increase the number of input qubits from 1 to $n$ like this…
+<img src="Deutsch-Jozsa_algo.png" alt="png" />
+The reset of the process is the same. Measuring the $n$ input qubits at the very end will give all 0’s <strong>only</strong> for a constant function. If we measure <strong>any other</strong> state, we know $f(x)$ is a balanced function. Try and make you’re own balanced or constant $U_f$ and see how it goes. Here’s my attempt using a balanced function of just one CNOT gate. Remember, for a balanced function, the measured state of the input qubits should give a state OTHER than 0000.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">h</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+<span class="n">circuit</span><span class="o">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+
+<span class="c1"># Visualize circuit
+</span><span class="n">circuit</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</code></pre></div></div>
+
+<pre style="word-wrap: normal;white-space: pre;background: #fff0;line-height: 1.1;font-family: &quot;Courier New&quot;,Courier,monospace">        ┌───┐      ░       ░ ┌───┐┌─┐         
+q_0: |0&gt;┤ H ├──────░───────░─┤ H ├┤M├─────────
+        ├───┤      ░       ░ ├───┤└╥┘┌─┐      
+q_1: |0&gt;┤ H ├──────░───────░─┤ H ├─╫─┤M├──────
+        ├───┤      ░       ░ ├───┤ ║ └╥┘┌─┐   
+q_2: |0&gt;┤ H ├──────░───────░─┤ H ├─╫──╫─┤M├───
+        ├───┤      ░       ░ ├───┤ ║  ║ └╥┘┌─┐
+q_3: |0&gt;┤ H ├──────░───■───░─┤ H ├─╫──╫──╫─┤M├
+        ├───┤┌───┐ ░ ┌─┴─┐ ░ ├───┤ ║  ║  ║ └╥┘
+q_4: |0&gt;┤ X ├┤ H ├─░─┤ X ├─░─┤ H ├─╫──╫──╫──╫─
+        └───┘└───┘ ░ └───┘ ░ └───┘ ║  ║  ║  ║ 
+ c_0: 0 ═══════════════════════════╩══╬══╬══╬═
+                                      ║  ║  ║ 
+ c_1: 0 ══════════════════════════════╩══╬══╬═
+                                         ║  ║ 
+ c_2: 0 ═════════════════════════════════╩══╬═
+                                            ║ 
+ c_3: 0 ════════════════════════════════════╩═
+                                              </pre>
+
+<h3 id="deutch-jozsa-simulated-quantum-computer">Deutch-Jozsa simulated quantum computer</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Execute quantum circuit and view results
+</span><span class="n">result</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">backend_sim</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">sim_shots</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+<span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+<span class="n">visualization</span><span class="o">.</span><span class="n">plot_histogram</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/output_26_0.png" alt="png" /></p>
+
+<h3 id="deutsh-jozsa-real-quantum-computer">Deutsh-Jozsa real quantum computer</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">result</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">backend_real</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">max_real_shots</span><span class="p">)</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+<span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+<span class="n">visualization</span><span class="o">.</span><span class="n">plot_histogram</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/output_28_0.png" alt="png" /></p>
+
+<h2 id="quantum-speedup">Quantum Speedup?</h2>
+<p>Deutsch-Jozsa was the first quantum algorithm that showed exponentially faster computation than a classical computer. For $n$ input bits, a classical computer would need, in a worst case scenario, roughly $2^{n-1}+1$ runs while a quantum computer <strong>needs only 1</strong>! Let’s tabulate this to get a little prospective. Let’s assume one run for both classical and quantum computers takes 10 nanoseconds (ns).</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{array}{c|c|c}
+  & \text{classical computation time} & \text{quantum computation time} \\\hline
+  n=1 & 2 \text{ ns}& 1 \text{ ns} \\\hline
+  n=10 & 513 \text{ ns}& 1  \text{ ns}\\\hline
+  n=50 & 6.5 \text{ days}& 1 \text{ ns}\\\hline
+  n=90 & 19.6 \gt \text{ billion years}& 1 \text{ ns}\\
+\end{array} %]]></script>
+
+<p>For context, $19.6$ <strong>BILLION YEARS</strong> is longer than the universe has been around. THAT’s what an exponential speedup means. THAT’s why people are so hot on making quantum computers work. (Though to solve other problem’s than the Deutsch Problem.)</p>
+
+  </div><a class="u-url" href="/2020/02/27/Deutsch-Jozsa-Algorithm.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Applied Quantum Computation</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Applied Quantum Computation</li><li><a class="u-email" href="mailto:quantumrepeater@gmail.com">quantumrepeater@gmail.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/applied-quantum-computing"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">applied-quantum-computing</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Quantum algorithms explained, computed, and tutorialized.</p>
+        <p>Want to contribute? See how to <a href=https://appliedqc.org/about/>contact us<a/>.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

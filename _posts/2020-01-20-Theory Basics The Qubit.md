@@ -1,7 +1,7 @@
 ---
 layout: post
 published: true
-title:  "Theory Basics: the Qubit"
+title: "Theory Basics: the Qubit"
 author: AJ Rasmusson
 date: 2020-01-20
 mathjax: true
