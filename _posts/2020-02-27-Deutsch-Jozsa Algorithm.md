@@ -65,19 +65,19 @@ q_1: |0>┤1     ├
 
 
 
-How do we determine the behavior of $f(x)$? If you have a quantum computer, we use Deutsch's algorithm of course!
+How do we determine the behavior of $$f(x)$$? If you have a quantum computer, we use Deutsch's algorithm of course!
 
 ## Deutsch's Algorithm
 The classical approach would be to try a lot of inputs and wait until we measure different outputs or until we've tried more than half of all possible inputs. In the worse case scenario, we'd need to try half of all possible input states then one more to break the tie between balanced or constant.
 
-The quantum approach (1) makes a superposition of all possible inputs, (2) applies $f(x)$ through the $U_f$ operation to all possible inputs, and (3) interferes the possibilities such that a 0 measured on the input qubit (q_0) means $f(x)$ is constant and 1 means $f(x)$ is balanced.
+The quantum approach (1) makes a superposition of all possible inputs, (2) applies $$f(x)$$ through the $$U_f$$ operation to all possible inputs, and (3) interferes the possibilities such that a 0 measured on the input qubit (q_0) means $$f(x)$$ is constant and 1 means $$f(x)$$ is balanced.
 
 Let's do it!
 
-To makes a superposition of all possible inputs, we apply a Hadamard (H) to the input qubit (q_0). To get the right interference later on, the output qubit (q_1) needs to be a 1 before the H gate, so it will get gates X then H. We apply the mystery function $f(x)$ as a unitary operation $U_f$ on the qubits. To complete the interference, every qubit gets an H after $U_f$. Then we measure the input qubits. Ironically, to answer information about the function, we don't need to measure it's output! Our circuit will look something like this..
-![png](Deutsch_algo.png)
+To makes a superposition of all possible inputs, we apply a Hadamard (H) to the input qubit (q_0). To get the right interference later on, the output qubit (q_1) needs to be a 1 before the H gate, so it will get gates X then H. We apply the mystery function $$f(x)$$ as a unitary operation $$U_f$$ on the qubits. To complete the interference, every qubit gets an H after $$U_f$$. Then we measure the input qubits. Ironically, to answer information about the function, we don't need to measure it's output! Our circuit will look something like this..
+![png](/assets/images/Deutsch_algo.png)
 
-On Qiskit, we get this, but add barriers around $U_f$ to help us remember where $U_f$ is when we do examples later on.
+On Qiskit, we get this, but add barriers around $$U_f$$ to help us remember where $$U_f$$ is when we do examples later on.
 
 
 ```python
@@ -107,8 +107,8 @@ q_1: |0>┤ X ├┤ H ├─░─┤1     ├─░─┤ H ├─╫─
 
 
 
-### Examples of $U_f$: $U_{f_0}$
-For sake of experimenting, let's pick some $U_f$s and see if the algorithm works! The simplest $U_f$ is nothing. This would correspond to a constant function; no matter what state we make q_0 (the input qubit), q_1 (the output qubit) will always be 0. Remember, for a constant function q_0 should always be in the 0 state.
+### Examples of $$U_f$$: $$U_{f_0}$$
+For sake of experimenting, let's pick some $$U_f$$s and see if the algorithm works! The simplest $$U_f$$ is nothing. This would correspond to a constant function; no matter what state we make q_0 (the input qubit), q_1 (the output qubit) will always be 0. Remember, for a constant function q_0 should always be in the 0 state.
 
 
 ```python
@@ -155,9 +155,9 @@ visualization.plot_histogram(counts)
 
 
 
-Ta-da! The histogram shows 0 with 100% probability! For one qubit input and one qubit output, there are four unique $U_f$s . Let's run through the other three!
+Ta-da! The histogram shows 0 with 100% probability! For one qubit input and one qubit output, there are four unique $$U_f$$s . Let's run through the other three!
 
-### Examples of $U_f$: $U_{f_1}$
+### Examples of $$U_f$$: $$U_{f_1}$$
 
 
 ```python
@@ -202,7 +202,7 @@ visualization.plot_histogram(counts)
 
 
 
-### Examples of $U_f$: $U_{f_2}$
+### Examples of $$U_f$$: $$U_{f_2}$$
 
 
 ```python
@@ -248,7 +248,7 @@ visualization.plot_histogram(counts)
 
 
 
-### Examples of $U_f$: $U_{f_3}$
+### Examples of $$U_f$$: $$U_{f_3}$$
 
 
 ```python
@@ -293,8 +293,8 @@ visualization.plot_histogram(counts)
 
 
 
-### Examples of $U_f$: $U_{f_1}$ on a real quantum computer
-Of course, we should also runs these on a <strong>real quantum computer</strong>. I'll pick $U_{f_1}$ which is a balanced function. You will need to have an [IBM Q Experience account](https://quantum-computing.ibm.com) to do this.
+### Examples of   $$U_f$$: $$U_{f_1}$$ on a real quantum computer
+Of course, we should also runs these on a <strong>real quantum computer</strong>. I'll pick $$U_{f_1}$$ which is a balanced function. You will need to have an [IBM Q Experience account](https://quantum-computing.ibm.com) to do this.
 
 
 ```python
@@ -361,12 +361,12 @@ visualization.plot_histogram(counts)
 
 
 
-Deutsch's algorithm <strong>guarantees</strong> q_0 will be 1 at the output for a balanced $U_f$, but that's not what we just measured! There's ~30% of a 0 state. What happened?? Well, the quantum computer isn't perfectly quantum all the time: electrical noise in executing the gates, the temperature of the superconducting chips, vibrations, etc. etc. all work toward making these qubits no longer "quantum" and reduces it's efficiency at computing quantum algorithms.
+Deutsch's algorithm <strong>guarantees</strong> q_0 will be 1 at the output for a balanced $$U_f$$, but that's not what we just measured! There's ~30% of a 0 state. What happened?? Well, the quantum computer isn't perfectly quantum all the time: electrical noise in executing the gates, the temperature of the superconducting chips, vibrations, etc. etc. all work toward making these qubits no longer "quantum" and reduces it's efficiency at computing quantum algorithms.
 
 ## Deutsch-Jozsa Problem (and algorithm)
-The extension from Deutsch to Deutsch-Jozsa is straight forward. We simply increase the number of input qubits from 1 to $n$ like this...
-![png](Deutsch-Jozsa_algo.png)
-The reset of the process is the same. Measuring the $n$ input qubits at the very end will give all 0's <strong>only</strong> for a constant function. If we measure <strong>any other</strong> state, we know $f(x)$ is a balanced function. Try and make you're own balanced or constant $U_f$ and see how it goes. Here's my attempt using a balanced function of just one CNOT gate. Remember, for a balanced function, the measured state of the input qubits should give a state OTHER than 0000.
+The extension from Deutsch to Deutsch-Jozsa is straight forward. We simply increase the number of input qubits from 1 to $$n$$ like this...
+![png](/assets/images/Deutsch-Jozsa_algo.png)
+The reset of the process is the same. Measuring the $$n$$ input qubits at the very end will give all 0's <strong>only</strong> for a constant function. If we measure <strong>any other</strong> state, we know $$f(x)$$ is a balanced function. Try and make you're own balanced or constant $$U_f$$ and see how it goes. Here's my attempt using a balanced function of just one CNOT gate. Remember, for a balanced function, the measured state of the input qubits should give a state OTHER than 0000.
 
 
 ```python
