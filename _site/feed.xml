@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-01-20T13:05:39-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Applied Quantum Computation</title><subtitle>Quantum algorithms explained, computed, and tutorialized.</subtitle><entry><title type="html">Theory Basics: the Qubit</title><link href="http://localhost:4000/2020/01/20/Theory-Basics-The-Qubit.html" rel="alternate" type="text/html" title="Theory Basics: the Qubit" /><published>2020-01-20T00:00:00-05:00</published><updated>2020-01-20T00:00:00-05:00</updated><id>http://localhost:4000/2020/01/20/Theory%20Basics%20The%20Qubit</id><content type="html" xml:base="http://localhost:4000/2020/01/20/Theory-Basics-The-Qubit.html">&lt;h1 id=&quot;theory-basics-the-qubit&quot;&gt;Theory Basics: the Qubit&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-02-27T07:22:54-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Applied Quantum Computation</title><subtitle>Quantum algorithms explained, computed, and tutorialized.</subtitle><entry><title type="html">Theory Basics: the Qubit</title><link href="http://localhost:4000/2020/01/20/Theory-Basics-The-Qubit.html" rel="alternate" type="text/html" title="Theory Basics: the Qubit" /><published>2020-01-20T00:00:00-05:00</published><updated>2020-01-20T00:00:00-05:00</updated><id>http://localhost:4000/2020/01/20/Theory%20Basics%20The%20Qubit</id><content type="html" xml:base="http://localhost:4000/2020/01/20/Theory-Basics-The-Qubit.html">&lt;h1 id=&quot;theory-basics-the-qubit&quot;&gt;Theory Basics: the Qubit&lt;/h1&gt;
 
 &lt;p&gt;This notebook is for beginners! :D Those who are interested in quantum computing but have minimal to no experience. It’s &lt;strong&gt;part one&lt;/strong&gt; of the Theory Basics series, which is all about the basics of how quantum computing works. Here, I cover &lt;strong&gt;qubits&lt;/strong&gt;—the basic unit of information in quantum computing.&lt;/p&gt;
 
@@ -50,14 +50,11 @@ q_0: |0&amp;gt;┤ H ├┤M├
 
 &lt;p&gt;You just created a quantum computing code. How cool!! :D&lt;/p&gt;
 
-&lt;table&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Let’s take a moment and discuss what happened. We initialized one qubit and one classical bit by calling &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;QuantumCircuit(1,1)&lt;/code&gt;. That’s the “q_0:” and “c_0:” part of the drawing above. In qiskit, all qubits are initialized to 0 represented by the “&lt;/td&gt;
-      &lt;td&gt;0&amp;gt;” part of the drawing. Why the need for a classical bit you ask? When the qubit is measured, the result needs to be stored somewhere. The classical bit is where the measurement result is stored. In some experiments you may not need a classical bit to companion every qubit because you don’t intent of measure every qubit. (Sometimes, the qubits and they’re bit companions are referred to as quantum and classical registers.) Next, we manipulated the qubit with a &lt;a href=&quot;https://en.wikipedia.org/wiki/Quantum_logic_gate#Hadamard_(H)_gate&quot;&gt;Hadamard gate&lt;/a&gt;—the box with the “H” in it. Last of all, we have to measure the qubit! Measurement is represented in qiskit by an “M” in a box with double lines going down to the qubit’s companion bit.&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
+&lt;p&gt;Let’s take a moment to zoom in and decompose that quantum circuit with a picture and some explanations.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/theorybasicsquantumcircuit.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;We initialized one qubit and one classical bit by calling &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;QuantumCircuit(1,1)&lt;/code&gt;. That’s the “q_0:” and “c_0:” part of the drawing above. In qiskit, all qubits are initialized to 0 represented by the “|0&amp;gt;” part of the drawing. Why the need for a classical bit you ask? When the qubit is measured, the result needs to be stored somewhere. The classical bit is where the measurement result is stored. In some experiments you may not need a classical bit to companion every qubit because you don’t intent of measure every qubit. (Sometimes, the qubits and they’re bit companions are referred to as quantum and classical registers.) Next, we manipulated the qubit with a &lt;a href=&quot;https://en.wikipedia.org/wiki/Quantum_logic_gate#Hadamard_(H)_gate&quot;&gt;Hadamard gate&lt;/a&gt;—the box with the “H” in it. Last of all, we have to measure the qubit! Measurement is represented in qiskit by an “M” in a box with double lines going down to the qubit’s companion bit.&lt;/p&gt;
 
 &lt;p&gt;Just like any code, after you write it you execute it! Let’s run the circuit on a simulated quantum computer to see what happens.&lt;/p&gt;
 
@@ -73,7 +70,7 @@ q_0: |0&amp;gt;┤ H ├┤M├
 &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;visualization&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot_histogram&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;counts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;&lt;img src=&quot;/asssets/images/theorybasicsthequbit_img0.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/theorybasicsthequbit_img0.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;The above histogram shows the qubit probability (e.g. .45 meaning 45%) on the vertical axis with the qubit state label (0 or 1) on the horizontal axis.&lt;/p&gt;
 
@@ -103,7 +100,7 @@ q_0: |0&amp;gt;┤ X ├┤ H ├┤M├
 &lt;span class=&quot;n&quot;&gt;visualization&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot_histogram&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;counts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;&lt;img src=&quot;/asssets/images/theorybasicsthequbit_img1.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/theorybasicsthequbit_img1.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;The Hadamard gate takes in 1 and randomly outputs 0 and 1 with even probability—just like what it did to 0!&lt;/p&gt;
 
@@ -132,7 +129,7 @@ q_0: |0&amp;gt;┤ H ├┤ H ├┤M├
 &lt;span class=&quot;n&quot;&gt;visualization&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot_histogram&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;counts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;&lt;img src=&quot;/asssets/images/theorybasicsthequbit_img2.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/theorybasicsthequbit_img2.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;100% 0 is &lt;strong&gt;NOT what we expected&lt;/strong&gt;. (What if we had input a 1 into the two Hadamard gates? Insert your own code to see what happens.) How is that possible? We should have seen 50% 0 and 50% 1. If a single Hadamard gate randomly assigned the 0 state to 0 or 1, did the second Hadamard know which states were coming from the first Hadamard gate and purposefully counteract the random assignments? But, “purposefully” counteracting is the opposite of random, which is the known behavior of a single Hadamard gate! This is not explainable with normal logic. &lt;strong&gt;Welcome to quantum weirdness.&lt;/strong&gt;&lt;/p&gt;
 
@@ -163,7 +160,7 @@ q_0: |0&amp;gt;┤ H ├┤M├┤ H ├┤M├
 &lt;span class=&quot;n&quot;&gt;visualization&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot_histogram&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;counts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;&lt;img src=&quot;/asssets/images/theorybasicsthequbit_img3.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/images/theorybasicsthequbit_img3.png&quot; alt=&quot;png&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;This is obviously very different from the previous two Hadamard gate circuit, but all we did was “peak” between the gates with a measurement!&lt;/p&gt;
 
@@ -173,7 +170,7 @@ q_0: |0&amp;gt;┤ H ├┤M├┤ H ├┤M├
 &lt;p&gt;Now that we understand how qiskit gives the results, we see the qubit is 50% 0 and 50% 1 after the first Hadamard and 50% 0 and 50% 1 after the second Hadamard! Just what our logical intuition said the behavior &lt;strong&gt;SHOULD&lt;/strong&gt; have been. What does this mean for this mysterious double Hadamard behavior? When we didn’t measure between, the output state of the circuit is the same as we started with. If we do measure between the two gates, they act like as their usual individual selves.&lt;/p&gt;
 
 &lt;h2 id=&quot;superposition&quot;&gt;Superposition&lt;/h2&gt;
-&lt;p&gt;The conclusion scientists (and you) have come to is that the usual OR logic is not enough to explain the two Hadamard gate behavior. The Hadamard gate must be outputting a state that follows AND logic. A cool word scientists invented for this state is &lt;strong&gt;superposition&lt;/strong&gt;. After a Hadamard gate, we say the qubit is in a “superposition of 0 and 1.” You may have heard this state refered to as being 0 and 1, but this is wrong. To say the state is 0 and 1 implies 0 and 1 are not mutually exclusive, but by construction they are mutually exclusive; 0 is not-1 and 1 is not-0. It is a common (or lazy) enough mistake. Rather the superposition state the Hadamard gate output is a completely new state (i.e. the new word superposition) that follows completely new logic.&lt;/p&gt;</content><author><name>AJ Rasmusson</name></author><category term="beginner" /><category term="qubit" /><category term="theory-basics" /><category term="qiskit" /><category term="Hadamard" /><category term="superposition" /><summary type="html">Theory Basics: the Qubit</summary></entry><entry><title type="html">Divisive Hierarchical Quantum Clustering with Max-cut</title><link href="http://localhost:4000/2019/11/13/Max-cut-2+-Divisive-Clustering.html" rel="alternate" type="text/html" title="Divisive Hierarchical Quantum Clustering with Max-cut" /><published>2019-11-13T00:00:00-05:00</published><updated>2019-11-13T00:00:00-05:00</updated><id>http://localhost:4000/2019/11/13/Max-cut%202+%20Divisive%20Clustering</id><content type="html" xml:base="http://localhost:4000/2019/11/13/Max-cut-2+-Divisive-Clustering.html">&lt;h1 id=&quot;2-clustering-with-max-cut&quot;&gt;2+ Clustering with Max-cut&lt;/h1&gt;
+&lt;p&gt;The conclusion scientists (and you) have come to is that the usual OR logic is not enough to explain the two Hadamard gate behavior. The Hadamard gate must be outputting a state that follows AND logic. A cool word scientists invented for this state is &lt;strong&gt;superposition&lt;/strong&gt;. After a Hadamard gate, we say the qubit is in a “superposition of 0 and 1.” You may have heard this state refered to as being 0 and 1, but this is wrong. To say the state is 0 and 1 implies 0 and 1 are not mutually exclusive, but by construction they are mutually exclusive; 0 is not-1 and 1 is not-0. It is a common (or lazy) enough mistake. Rather, the superposition state the Hadamard gate output is a completely new state (thus the need for the new word superposition) that follows completely new logic.&lt;/p&gt;</content><author><name>AJ Rasmusson</name></author><category term="beginner" /><category term="qubit" /><category term="theory-basics" /><category term="qiskit" /><category term="hadamard" /><category term="superposition" /><summary type="html">Theory Basics: the Qubit</summary></entry><entry><title type="html">Divisive Hierarchical Quantum Clustering with Max-cut</title><link href="http://localhost:4000/2019/11/13/Max-cut-2+-Divisive-Clustering.html" rel="alternate" type="text/html" title="Divisive Hierarchical Quantum Clustering with Max-cut" /><published>2019-11-13T00:00:00-05:00</published><updated>2019-11-13T00:00:00-05:00</updated><id>http://localhost:4000/2019/11/13/Max-cut%202+%20Divisive%20Clustering</id><content type="html" xml:base="http://localhost:4000/2019/11/13/Max-cut-2+-Divisive-Clustering.html">&lt;h1 id=&quot;2-clustering-with-max-cut&quot;&gt;2+ Clustering with Max-cut&lt;/h1&gt;
 &lt;p&gt;This notebook is an example of unsupervised learning on a quantum computer. The data used are from the iris data set. For faster run time, you will need an &lt;a href=&quot;https://quantum-computing.ibm.com&quot;&gt;IBMQ account&lt;/a&gt; to use their 32 qubit simulator.&lt;/p&gt;
 
 &lt;p&gt;In the &lt;a href=&quot;https://ajrazander.github.io/unsupervised-machine-learning/max-cut/2019/11/07/Quantum-Max-cut-vs-K-means.html&quot;&gt;previous notebook&lt;/a&gt;, the max-cut problem was solved using QAOA, which gave a quantum speed up to unsupervised learning. Solving the max-cut problem is effectively a binary classifier. In this notebook, we focus on techniques that allow a binary classifier to cluster data into 2+ groups. To summarize this idea with a single question: How can a binary classifier, like QAOA solving the max-cut problem, be used to cluster data into more than 2 clusters?&lt;/p&gt;
