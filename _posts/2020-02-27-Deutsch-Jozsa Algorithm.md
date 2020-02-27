@@ -31,7 +31,7 @@ from qiskit import *
 ```
 
 ## Deutsch's Problem
-We'll first start with Deutsch's original algorithm. The problem it answered goes like this. Given an unknown binary function $f(x)$ (aka black box or oracle) that maps one bit to another bit, $f(x):\{0,1\} \rightarrow\{0,1\}$, determine if $f(x)$ is constant or balanced. A constant function means $f(0)=f(1)$ while a balanced function means $f(0)\neq f(1)$ (since we're only considering binary input and output). For one input qubit and one output qubit, there are only four unique binary functions. Let's name them $f_0,f_1,f_2, \text{and} f_3$ and tabulate their possible outputs.
+We'll first start with Deutsch's original algorithm. The problem it answered goes like this. Given an unknown binary function $$f(x)$$ (aka black box or oracle) that maps one bit to another bit, $$f(x):\{0,1\} \rightarrow\{0,1\}$$, determine if $$f(x)$$ is constant or balanced. A constant function means $$f(0)=f(1)$$ while a balanced function means $$f(0)\neq f(1)$$ (since we're only considering binary input and output). For one input qubit and one output qubit, there are only four unique binary functions. Let's name them $$f_0,f_1,f_2, \text{and} f_3$$ and tabulate their possible outputs.
 
 $$
 \begin{array}{c|c|c}
@@ -43,7 +43,7 @@ $$
 \end{array}
 $$
 
-From this table, we see $f_0$ and $f_3$ are constant functions while $f_1$ and $f_2$ are balanced functions. Now, let's say a friend randomly picks one of these functions but hides its identity from us calling it simply $f(x)$. Our friend implements the randomly chosen $f(x)$ as a unitary (probability conserving) operation $U_f$ that spans the input (q_0) and output (q_1) qubits like so...
+From this table, we see $$f_0$$ and $$f_3$$ are constant functions while $$f_1$$ and $$f_2$$ are balanced functions. Now, let's say a friend randomly picks one of these functions but hides its identity from us calling it simply $$f(x)$$. Our friend implements the randomly chosen $$f(x)$$ as a unitary (probability conserving) operation $$U_f$$ that spans the input (q_0) and output (q_1) qubits like so...
 
 
 ```python
@@ -442,7 +442,7 @@ visualization.plot_histogram(counts)
 
 
 ## Quantum Speedup?
-Deutsch-Jozsa was the first quantum algorithm that showed exponentially faster computation than a classical computer. For $n$ input bits, a classical computer would need, in a worst case scenario, roughly $2^{n-1}+1$ runs while a quantum computer <strong>needs only 1</strong>! Let's tabulate this to get a little prospective. Let's assume one run for both classical and quantum computers takes 10 nanoseconds (ns).
+Deutsch-Jozsa was the first quantum algorithm that showed exponentially faster computation than a classical computer. For $$n$$ input bits, a classical computer would need, in a worst case scenario, roughly $$2^{n-1}+1$$ runs while a quantum computer <strong>needs only 1</strong>! Let's tabulate this to get a little prospective. Let's assume one run for both classical and quantum computers takes 10 nanoseconds (ns).
 
 $$
 \begin{array}{c|c|c}
@@ -454,4 +454,4 @@ $$
 \end{array}
 $$
 
-For context, $19.6$ <strong>BILLION YEARS</strong> is longer than the universe has been around. THAT's what an exponential speedup means. THAT's why people are so hot on making quantum computers work. (Though to solve other problem's than the Deutsch Problem.)
+For context, $$19.6$$ <strong>BILLION YEARS</strong> is longer than the universe has been around. THAT's what an exponential speedup means. THAT's why people are so hot on making quantum computers work. (Though to solve other problem's than the Deutsch Problem.)
