@@ -151,7 +151,7 @@ visualization.plot_histogram(counts)
 
 
 
-![png](/assets/images/df_output_8_0.png)
+![png](/assets/images/dj_output_8_0.png)
 
 
 
@@ -198,7 +198,7 @@ visualization.plot_histogram(counts)
 
 
 
-![png](/assets/images/df_output_11_0.png)
+![png](/assets/images/dj_output_11_0.png)
 
 
 
@@ -244,7 +244,7 @@ visualization.plot_histogram(counts)
 
 
 
-![png](/assets/images/df_output_14_0.png)
+![png](/assets/images/dj_output_14_0.png)
 
 
 
@@ -289,7 +289,7 @@ visualization.plot_histogram(counts)
 
 
 
-![png](/assets/images/df_output_17_0.png)
+![png](/assets/images/dj_output_17_0.png)
 
 
 
@@ -357,7 +357,7 @@ visualization.plot_histogram(counts)
 
 
 
-![png](/assets/images/df_output_21_0.png)
+![png](/assets/images/dj_output_21_0.png)
 
 
 
@@ -421,7 +421,7 @@ visualization.plot_histogram(counts)
 
 
 
-![png](/assets/images/df_output_26_0.png)
+![png](/assets/images/dj_output_26_0.png)
 
 
 
@@ -437,7 +437,7 @@ visualization.plot_histogram(counts)
 
 
 
-![png](/assets/images/df_output_28_0.png)
+![png](/assets/images/dj_output_28_0.png)
 
 
 
