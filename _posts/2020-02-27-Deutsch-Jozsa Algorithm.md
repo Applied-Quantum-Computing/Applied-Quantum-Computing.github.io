@@ -26,7 +26,7 @@ Deutsch's algorithm, which was later generalized to the Deutsch-Josza algorithm,
 ```python
 # This may take a few seconds
 import numpy as np
-import pandas as pd
+
 from qiskit import *
 ```
 
