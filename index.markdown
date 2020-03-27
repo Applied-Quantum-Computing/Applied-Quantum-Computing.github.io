@@ -4,5 +4,4 @@ exclude: true
 ---
 
 # Welcome to Applied Quantum Computation
-An understandable, personable blog in quantum computing applications.
-
+A personable blog in learning about and messing around with quantum computing.
