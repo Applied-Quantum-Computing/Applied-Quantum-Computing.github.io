@@ -29,7 +29,7 @@ from qiskit import *
 ```
 
 ## Review: Deutsch-Jozsa Problem (and algorithm)
-The problem goes like this: Given an unknown binary function $f(x)$ (aka black box or oracle) that maps $n$ input bits to one output bit, i.e. $f(x):\{0,1\}^n \rightarrow\{0,1\}$, determine if $f(x)$ is constant or balanced. A constant function means no matter what binary number $x$ we input, $f(x)$ will always output the same value. A balanced function means half of all possible input $x$'s give $f(x)=0$ while the other half give $f(x)=1$.
+The problem goes like this: Given an unknown binary function $$f(x)$$ (aka black box or oracle) that maps $$n$$ input bits to one output bit, i.e. $$f(x):\{0,1\}^n \rightarrow\{0,1\}$$, determine if $$f(x)$$ is constant or balanced. A constant function means no matter what binary number $$x$$ we input, $$f(x)$$ will always output the same value. A balanced function means half of all possible input $$x$$'s give $$f(x)=0$$ while the other half give $$f(x)=1$$.
 
 ### Quantum Algorithm
 And, if you remember, the algorithm went something like this:
@@ -37,14 +37,14 @@ And, if you remember, the algorithm went something like this:
 The output qubit (at the bottom) is 'marked' by applying the x gate. Then the qubits are parallelized with the column of H's into an equal superposition of all possible input and output states. Since the output qubit was marked, it has a different phase from the superposition of the input qubits. $U_f$ imprints $f(x)$ as a phase in the superposition state of the qubits (phase kickback). The second column of H's interferes the superposition state with itself so the the input qubits' final state—if you do the math—is all 0's <strong>only</strong> for a constant function. If we measure <strong>any other</strong> state from the input qubits, we know $f(x)$ is a balanced function.
 
 ### Classical Algorithm
-The classical way to determine if $f(x)$ is constant or balanced is to randomly input binary numbers until either: (1) the function has output both a $0$ and $1$ or (2) we get the same output after trying one more than half of all possible inputs ($2^{n-1}+1$ possibilities). For case (1), since the function output a $0$ and $1$, we know it must be balanced. For case (2), the function output the same value for one more than half of all possible inputs, so $f(x)$ cannot be balanced. Since there are only two options for what $f(x)$ is, $f(x)$ must be constant. 
+The classical way to determine if $$f(x)$$ is constant or balanced is to randomly input binary numbers until either: (1) the function has output both a $$0$$ and $$1$$ or (2) we get the same output after trying one more than half of all possible inputs ($$2^{n-1}+1$$ possibilities). For case (1), since the function output a $$0$$ and $$1$$, we know it must be balanced. For case (2), the function output the same value for one more than half of all possible inputs, so $$f(x)$$ cannot be balanced. Since there are only two options for what $$f(x)$$ is, $$f(x)$$ must be constant. 
 
-Notice the worst case scenario is when the algorithm will takes $2^{n-1}+1$ executions of $f(x)$, which is EVERY time $f(x)$ is a constant function. However, if $f(x)$ is balanced, the classical algorithm could detect this WAY before $2^{n-1}+1$ executions. In fact, the best case scenario is just $2$ executions.
+Notice the worst case scenario is when the algorithm will takes $$2^{n-1}+1$$ executions of $$f(x)$$, which is EVERY time $$f(x)$$ is a constant function. However, if $$f(x)$$ is balanced, the classical algorithm could detect this WAY before $$2^{n-1}+1$$ executions. In fact, the best case scenario is just $$2$$ executions.
 
-Obviously, if the classical algorithm finds the answer in $2$ executions, current quantum computers don't have chance at beating them. Let's help the quantum computer out by <strong>just</strong> doing <strong>constant functions</strong>. Yes, the classical algorithm is exponentially slower, but if each execution is million times faster than a current quantum computers... maybe the classical algorithm still takes less time overall against current quantum computers. Maybe $n$ has to be like... a billion or something astronomical before a quantum computer beats out a classical one. So, our quest becomes: <strong>At what point would a quantum computer beat out a classical computer and is that point accessible with today's quantum computers?</strong>
+Obviously, if the classical algorithm finds the answer in $$2$$ executions, current quantum computers don't have chance at beating them. Let's help the quantum computer out by <strong>just</strong> doing <strong>constant functions</strong>. Yes, the classical algorithm is exponentially slower, but if each execution is million times faster than a current quantum computers... maybe the classical algorithm still takes less time overall against current quantum computers. Maybe $$n$$ has to be like... a billion or something astronomical before a quantum computer beats out a classical one. So, our quest becomes: <strong>At what point would a quantum computer beat out a classical computer and is that point accessible with today's quantum computers?</strong>
 
 ## Define Constant Functions
-Our first step is to build a constant function that can be run on a classical and quantum computer. Which turns out to be very easy to do for both types of computers. For classical, totally ignore the input and have the function always return 0 or always return 1.
+Our first step is to build a constant function that can be run on a classical and quantum computer. Which turns out to be very easy to do for both types of computers. For classical, totally ignore the input and have the function always return $$0$$ or always return $$1$$.
 
 
 ```python
@@ -57,9 +57,9 @@ def f_const1(x):
 ```
 
 ## Deterministic Classical Algorithm
-The classical algorithm will unknowingly ingest a constant function $f$ and the number of input bits $n$. I'd like it to randomly choose binary numbers to input, but when I did that for ~$n>20$ my laptop took a looonnnng time just to generate the random numbers—not including the time to input them into the function. If we were considering balanced functions, I'd bite the bullet and definitely do random inputs... But, since we know the functions are constant, ;) we'll just start from 0 and increment up to $2^{n-1}+1$! (I left the random number generating in there in case anyone wanted to try it out. just replace ```for x in non_random_inputs:``` with ```for x in random_inputs:``` and uncomment the definition of the random_inputs array).
+The classical algorithm will unknowingly ingest a constant function $$f$$ and the number of input bits $$n$$. I'd like it to randomly choose binary numbers to input, but when I did that for ~$$n>20$$ my laptop took a looonnnng time just to generate the random numbers—not including the time to input them into the function. If we were considering balanced functions, I'd bite the bullet and definitely do random inputs... But, since we know the functions are constant, ;) we'll just start from $$0$$ and increment up to $$2^{n-1}+1$$! (I left the random number generating in there in case anyone wanted to try it out. just replace ```for x in non_random_inputs:``` with ```for x in random_inputs:``` and uncomment the definition of the random_inputs array).
 
-If the algorithm loop gets to the $2^{n-1}+1$th input (one more than half the possible binary numbers for the given $n$) and gets the same output from $f(x)$ every time, it'll return a 0 indicating $f(x)$ is a constant function. If $f(x)$ outputs something different than a previous execution, we know it can't be a constant function. We'll immediately break and return a 1 indicating $f(x)$ is a balanced function. Of course, we know it will always be a constant function, but might as well make it work for the balanced function case. A previous version of this post did work with balanced functions, so if you want to dive into that realm, hopefully this code gives you a head start.
+If the algorithm loop gets to the $$2^{n-1}+1$$th input (one more than half the possible binary numbers for the given $$n$$) and gets the same output from $$f(x)$$ every time, it'll return a 0 indicating $$f(x)$$ is a constant function. If $$f(x)$$ outputs something different than a previous execution, we know it can't be a constant function. We'll immediately break and return a 1 indicating $$f(x)$$ is a balanced function. Of course, we know it will always be a constant function, but might as well make it work for the balanced function case. A previous version of this post did work with balanced functions, so if you want to dive into that realm, hopefully this code gives you a head start.
 
 Last of all, I included some approximate time keeping in the classical algorithm so we can compare it to the quantum algorithm.
 
@@ -96,7 +96,7 @@ def classical_algo(f, n):
 ```
 
 ## Timed Trial: Classical Algorithm
-Now that we have our algorithm ready and timed, let's run it! A LOT! We can try a small range of bits and run each $n$ value ~100 or more. That should be enough to get some good statistics on its variability. Let's also see if $n$ vs run time scales like $2^{n-1}$ as the theory suggests. Though I defined two constant functions, I just use the first one here. (It would be interesting to randomly pick between different constant functions. Maybe I'll do that in another post.)
+Now that we have our algorithm ready and timed, let's run it! A LOT! We can try a small range of bits and run each $$n$$ value ~$$100$$ or more. That should be enough to get some good statistics on its variability. Let's also see if $$n$$ vs run time scales like $$2^{n-1}$$ as the theory suggests. Though I defined two constant functions, I just use the first one here. (It would be interesting to randomly pick between different constant functions. Maybe I'll do that in another post.)
 
 
 ```python
@@ -153,7 +153,7 @@ plt.show()
 ![png](/assets/images/df_9_1.png)
 
 
-Wow, that's <strong><em>very</em></strong> exponential—just like we expected! The blue line is the mean runtime for a given number of bits. The gray shadow that outlines the first standard deviation from the mean is so small, it can't be seen. Let's fit the means to a function of the form $a 2^{b(n-1)} + c$. From the theory we talked about before, we expect the runtime $T \propto 2^{n-1}$, so $b$ should be $1$. The $a$ and $c$ parameters aren't important because they're not part of the exponential. $b$ IS really important because it tells us how fast the exponential grows with $n$.
+Wow, that's <strong><em>very</em></strong> exponential—just like we expected! The blue line is the mean runtime for a given number of bits. The gray shadow that outlines the first standard deviation from the mean is so small, it can't be seen. Let's fit the means to a function of the form $$a 2^{b(n-1)} + c$$. From the theory we talked about before, we expect the runtime $$T \propto 2^{n-1}$$, so $$b$$ should be $$1$$. The $$a$$ and $$c$$ parameters aren't important because they're not part of the exponential. $$b$$ IS really important because it tells us how fast the exponential grows with $$n$$.
 
 
 ```python
@@ -187,10 +187,10 @@ plt.show()
 ![png](/assets/images/df_11_1.png)
 
 
-$b = 0.9994 \approx 1$!!! The theory was spot on! This classical algorithm scales just like we expected. Doesn't it warm your heart when theory and experiment agree with each other? The classical results are all squared away. Next up is the quantum computer.
+$$b = 0.9994 \approx 1$$!!! The theory was spot on! This classical algorithm scales just like we expected. Doesn't it warm your heart when theory and experiment agree with each other? The classical results are all squared away. Next up is the quantum computer.
 
 ## Define Constant Circuits
-The constant circuits are just as simple as the classical constant functions. The two easiest constant functions are doing nothing (the output is always 0), or have an $X$ gate (the output is always 1).
+The constant circuits are just as simple as the classical constant functions. The two easiest constant functions are doing nothing (the output is always $$0$$), or have an $$X$$ gate (the output is always $$1$$).
 
 
 ```python
@@ -203,7 +203,7 @@ def uf_const1(circuit, output_qubit):
 ```
 
 ## Deterministic Quantum Algorithm: Deutsch-Jozsa
-Below, I define the Deutsch-Jozsa algorithm in the function ```dj_algo_circuit``` and define a function to run and time it called ```quantum_algo```. Inside the ```dj_algo_circuit```, it's important to use the ```circuit.barrier()``` commands around the $U_f$. If we don't, the circuit will be optimized and the since our $U_f$ is so simple, the circuit will be very small. This is kind of cheating because, in theory, we want the algorithm to work for ANY $U_f$ not our cooked up very simple one which the optimizer will literally reduce down to just one or two gates. To tell qiskit to not optimize the whole circuit, we divide it up using the barrier command. It will only optimize gates between barriers or between a barrier and a circuit boundary (i.e. the beginning or end of the circuit).
+Below, I define the Deutsch-Jozsa algorithm in the function ```dj_algo_circuit``` and define a function to run and time it called ```quantum_algo```. Inside the ```dj_algo_circuit```, it's important to use the ```circuit.barrier()``` commands around the $$U_f$$. If we don't, the circuit will be optimized and the since our $$U_f$$ is so simple, the circuit will be very small. This is kind of cheating because, in theory, we want the algorithm to work for ANY $$U_f$$ not our cooked up very simple one which the optimizer will literally reduce down to just one or two gates. To tell qiskit to not optimize the whole circuit, we divide it up using the barrier command. It will only optimize gates between barriers or between a barrier and a circuit boundary (i.e. the beginning or end of the circuit).
 
 
 ```python
@@ -227,7 +227,7 @@ def quantum_algo(uf, n, backend, shots):
 ```
 
 ## Timed Trial: Deutsch-Jozsa with a 5-Qubit Quantum Computer
-Let's start with a small 5-qubit quantum computers. First, we'll find the least busy 5-qubit quantum computer. Then, we'll take the same approach as the classical algorithm's timed trial except the repetition number will be 10 instead of 100. Within each repetition, we need to decide how many shots the quantum computer should run. In an earlier version of this notebook, I did one shot per repetition, and the quantum computer classified $U_f$ as constant about 50% of the time—not very good (should be 100%). The more shots, the higher probability of getting the right answer, but also a longer data acquisition time.
+Let's start with a small 5-qubit quantum computers. First, we'll find the least busy 5-qubit quantum computer. Then, we'll take the same approach as the classical algorithm's timed trial except the repetition number will be 10 instead of 100. Within each repetition, we need to decide how many shots the quantum computer should run. In an earlier version of this notebook, I did one shot per repetition, and the quantum computer classified $$U_f$$ as constant about 50% of the time—not very good (should be 100%). The more shots, the higher probability of getting the right answer, but also a longer data acquisition time.
 
 
 ```python
@@ -333,7 +333,7 @@ plt.show()
 ![png](/assets/images/df_21_1.png)
 
 
-I might be getting ahead of myself but that looks NOT exponential! With so few data points it's really hard to be certain. Let's see what the fit parameters say. Notice the "Average label should be exactly 0:" value is 0.1375. That means the quantum computer miscategorized the function 13.75% of the time. I'd say that's pretty good, but still not great. Doing more shots would reduce this further.
+I might be getting ahead of myself but that looks NOT exponential! With so few data points it's really hard to be certain. Let's see what the fit parameters say. Notice the "Average label should be exactly 0:" value is $$0.1375$$. That means the quantum computer miscategorized the function $$13.75$$% of the time. I'd say that's pretty good, but still not great. Doing more shots would reduce this further.
 
 
 ```python
@@ -375,7 +375,7 @@ plt.show()
 ![png](/assets/images/df_23_1.png)
 
 
-As I said, by eye, it really could be linear or exponential. The fit parameters don't help us much. If it is exponential, the important parameter $b$ is already less than 1, so that's improvement from the classical case, but it's definitely possibly exponential. There just aren't enough data points to distinguish between a linear and exponential trend. Luckily, IBM has a 15-qubit quantum computer available! :D Let's try that. For sake of time, I only ran 1 repetition, so there are no statistics.
+As I said, by eye, it really could be linear or exponential. The fit parameters don't help us much. If it is exponential, the important parameter $$b$$ is already less than 1, so that's improvement from the classical case, but it's definitely possibly exponential. There just aren't enough data points to distinguish between a linear and exponential trend. Luckily, IBM has a 15-qubit quantum computer available! :D Let's try that. For sake of time, I only ran 1 repetition, so there are no statistics.
 
 ## Timed Trial: Deutsch-Jozsa with a 15-Qubit Quantum Computer
 
@@ -449,7 +449,7 @@ plt.show()
 ![png](/assets/images/df_29_1.png)
 
 
-Now <strong>THAT</strong> looks NOT exponential! Beautiful!! The theory says it should be flat, but some slope is not a problem. It can easily be swept under the rug as overhead in using more gates for higher qubit numbers or something like that. The important point is that IT'S NOT EXPONENTIAL! Sure enough, if you look at the fit parameter on the exponent (not plotted, but still computed below), it's very small $b=0.0000340$ implying a linear fit is the right one to use. Notice the miscategorization percentage is 78.57%. This is so high because I only ran this with $1$ shot. If I were to increase the number of shots, the percentage would lower.
+Now <strong>THAT</strong> looks NOT exponential! Beautiful!! The theory says it should be flat, but some slope is not a problem. It can easily be swept under the rug as overhead in using more gates for higher qubit numbers or something like that. The important point is that IT'S NOT EXPONENTIAL! Sure enough, if you look at the fit parameter on the exponent (not plotted, but still computed below), it's very small $$b=0.0000340$$ implying a linear fit is the right one to use. Notice the miscategorization percentage is $$78.57$$%. This is so high because I only ran this with $$1$$ shot. If I were to increase the number of shots, the percentage would lower.
 
 
 ```python
@@ -520,10 +520,10 @@ plt.show()
 ![png](/assets/images/df_33_0.png)
 
 
-Answer: $\gt25$! Looks like at 25 input bits/qubits is where the two are evenly matched, but after that the quantum computer would be WAY (exponentially in fact) faster!
+Answer: $$\gt25$$! Looks like at $$25$$ input bits/qubits is where the two are evenly matched, but after that the quantum computer would be WAY (exponentially in fact) faster!
 
 ## Age of the Universe Calculation
-At what point will the classical computer take the age of the universe just to discover our chosen $f(x)$ is constant? Let's assume the age of the universe is ~$14$ billion years—about $4.418 \cdot 10^{17}$ seconds—and solving the exponential fit equation for $n$ gives $n = \frac{\ln{\left(\frac{f(x) - c}{a}\right)}}{b\ln(2)} + 1$.
+At what point will the classical computer take the age of the universe just to discover our chosen $$f(x)$$ is constant? Let's assume the age of the universe is ~$$14$$ billion years—about $$4.418 \cdot 10^{17}$$ seconds—and solving the exponential fit equation for $$n$$ gives $$n = \frac{\ln{\left(\frac{f(x) - c}{a}\right)}}{b\ln(2)} + 1$$.
 
 
 ```python
@@ -537,4 +537,4 @@ print('Number of input bits:', int(n))
     Number of input bits: 81
 
 
-81! Hahaha that's still double digits! That's NOTHING! The best part about this is we're almost there! Google, IBM, IonQ, and others are already have quantum computers in the 30s - 50s of qubits!
+$$81$$! Hahaha that's still double digits! That's NOTHING! The best part about this is we're almost there! Google, IBM, IonQ, and others are already have quantum computers in the 30s - 50s of qubits!
