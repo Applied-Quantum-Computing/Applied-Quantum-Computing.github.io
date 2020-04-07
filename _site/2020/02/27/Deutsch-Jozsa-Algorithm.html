@@ -95,12 +95,12 @@
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># This may take a few seconds
 </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+
 <span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="o">*</span>
 </code></pre></div></div>
 
 <h2 id="deutschs-problem">Deutsch’s Problem</h2>
-<p>We’ll first start with Deutsch’s original algorithm. The problem it answered goes like this. Given an unknown binary function $f(x)$ (aka black box or oracle) that maps one bit to another bit, $f(x):{0,1} \rightarrow{0,1}$, determine if $f(x)$ is constant or balanced. A constant function means $f(0)=f(1)$ while a balanced function means $f(0)\neq f(1)$ (since we’re only considering binary input and output). For one input qubit and one output qubit, there are only four unique binary functions. Let’s name them $f_0,f_1,f_2, \text{and} f_3$ and tabulate their possible outputs.</p>
+<p>We’ll first start with Deutsch’s original algorithm. The problem it answered goes like this. Given an unknown binary function <script type="math/tex">f(x)</script> (aka black box or oracle) that maps one bit to another bit, <script type="math/tex">f(x):\{0,1\} \rightarrow\{0,1\}</script>, determine if <script type="math/tex">f(x)</script> is constant or balanced. A constant function means <script type="math/tex">f(0)=f(1)</script> while a balanced function means <script type="math/tex">f(0)\neq f(1)</script> (since we’re only considering binary input and output). For one input qubit and one output qubit, there are only four unique binary functions. Let’s name them <script type="math/tex">f_0,f_1,f_2, \text{and} f_3</script> and tabulate their possible outputs.</p>
 
 <script type="math/tex; mode=display">% <![CDATA[
 \begin{array}{c|c|c}
@@ -111,7 +111,7 @@
   f_3(x)= & 1 & 1 \\
 \end{array} %]]></script>
 
-<p>From this table, we see $f_0$ and $f_3$ are constant functions while $f_1$ and $f_2$ are balanced functions. Now, let’s say a friend randomly picks one of these functions but hides its identity from us calling it simply $f(x)$. Our friend implements the randomly chosen $f(x)$ as a unitary (probability conserving) operation $U_f$ that spans the input (q_0) and output (q_1) qubits like so…</p>
+<p>From this table, we see <script type="math/tex">f_0</script> and <script type="math/tex">f_3</script> are constant functions while <script type="math/tex">f_1</script> and <script type="math/tex">f_2</script> are balanced functions. Now, let’s say a friend randomly picks one of these functions but hides its identity from us calling it simply <script type="math/tex">f(x)</script>. Our friend implements the randomly chosen <script type="math/tex">f(x)</script> as a unitary (probability conserving) operation <script type="math/tex">U_f</script> that spans the input (q_0) and output (q_1) qubits like so…</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">qiskit</span><span class="o">.</span><span class="n">circuit</span><span class="o">.</span><span class="n">Gate</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'U_f'</span><span class="p">,</span> <span class="n">num_qubits</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">[]),</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
@@ -126,19 +126,19 @@ q_1: |0&gt;┤1     ├
  c_0: 0 ════════
                 </pre>
 
-<p>How do we determine the behavior of $f(x)$? If you have a quantum computer, we use Deutsch’s algorithm of course!</p>
+<p>How do we determine the behavior of <script type="math/tex">f(x)</script>? If you have a quantum computer, we use Deutsch’s algorithm of course!</p>
 
 <h2 id="deutschs-algorithm">Deutsch’s Algorithm</h2>
 <p>The classical approach would be to try a lot of inputs and wait until we measure different outputs or until we’ve tried more than half of all possible inputs. In the worse case scenario, we’d need to try half of all possible input states then one more to break the tie between balanced or constant.</p>
 
-<p>The quantum approach (1) makes a superposition of all possible inputs, (2) applies $f(x)$ through the $U_f$ operation to all possible inputs, and (3) interferes the possibilities such that a 0 measured on the input qubit (q_0) means $f(x)$ is constant and 1 means $f(x)$ is balanced.</p>
+<p>The quantum approach (1) makes a superposition of all possible inputs, (2) applies <script type="math/tex">f(x)</script> through the <script type="math/tex">U_f</script> operation to all possible inputs, and (3) interferes the possibilities such that a 0 measured on the input qubit (q_0) means <script type="math/tex">f(x)</script> is constant and 1 means <script type="math/tex">f(x)</script> is balanced.</p>
 
 <p>Let’s do it!</p>
 
-<p>To makes a superposition of all possible inputs, we apply a Hadamard (H) to the input qubit (q_0). To get the right interference later on, the output qubit (q_1) needs to be a 1 before the H gate, so it will get gates X then H. We apply the mystery function $f(x)$ as a unitary operation $U_f$ on the qubits. To complete the interference, every qubit gets an H after $U_f$. Then we measure the input qubits. Ironically, to answer information about the function, we don’t need to measure it’s output! Our circuit will look something like this..
-<img src="Deutsch_algo.png" alt="png" /></p>
+<p>To makes a superposition of all possible inputs, we apply a Hadamard (H) to the input qubit (q_0). To get the right interference later on, the output qubit (q_1) needs to be a 1 before the H gate, so it will get gates X then H. We apply the mystery function <script type="math/tex">f(x)</script> as a unitary operation <script type="math/tex">U_f</script> on the qubits. To complete the interference, every qubit gets an H after <script type="math/tex">U_f</script>. Then we measure the input qubits. Ironically, to answer information about the function, we don’t need to measure it’s output! Our circuit will look something like this..
+<img src="/assets/images/Deutsch_algo.png" alt="png" /></p>
 
-<p>On Qiskit, we get this, but add barriers around $U_f$ to help us remember where $U_f$ is when we do examples later on.</p>
+<p>On Qiskit, we get this, but add barriers around <script type="math/tex">U_f</script> to help us remember where <script type="math/tex">U_f</script> is when we do examples later on.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -161,8 +161,8 @@ q_1: |0&gt;┤ X ├┤ H ├─░─┤1     ├─░─┤ H ├─╫─
  c_0: 0 ══════════════════════════════╩═
                                         </pre>
 
-<h3 id="examples-of-u_f-u_f_0">Examples of $U_f$: $U_{f_0}$</h3>
-<p>For sake of experimenting, let’s pick some $U_f$s and see if the algorithm works! The simplest $U_f$ is nothing. This would correspond to a constant function; no matter what state we make q_0 (the input qubit), q_1 (the output qubit) will always be 0. Remember, for a constant function q_0 should always be in the 0 state.</p>
+<h3 id="examples-of-u_f-u_f_0">Examples of <script type="math/tex">U_f</script>: <script type="math/tex">U_{f_0}</script></h3>
+<p>For sake of experimenting, let’s pick some <script type="math/tex">U_f</script>s and see if the algorithm works! The simplest <script type="math/tex">U_f</script> is nothing. This would correspond to a constant function; no matter what state we make q_0 (the input qubit), q_1 (the output qubit) will always be 0. Remember, for a constant function q_0 should always be in the 0 state.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Constant U_f. Deutsch's algorithm should give a 0 on q_0
 </span><span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
@@ -193,11 +193,11 @@ q_1: |0&gt;┤ X ├┤ H ├─░──░─┤ H ├─╫─
 <span class="n">visualization</span><span class="o">.</span><span class="n">plot_histogram</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p><img src="/assets/images/output_8_0.png" alt="png" /></p>
+<p><img src="/assets/images/dj_output_8_0.png" alt="png" /></p>
 
-<p>Ta-da! The histogram shows 0 with 100% probability! For one qubit input and one qubit output, there are four unique $U_f$s . Let’s run through the other three!</p>
+<p>Ta-da! The histogram shows 0 with 100% probability! For one qubit input and one qubit output, there are four unique <script type="math/tex">U_f</script>s . Let’s run through the other three!</p>
 
-<h3 id="examples-of-u_f-u_f_1">Examples of $U_f$: $U_{f_1}$</h3>
+<h3 id="examples-of-u_f-u_f_1">Examples of <script type="math/tex">U_f</script>: <script type="math/tex">U_{f_1}</script></h3>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Balanced U_f. Deutsch's algorithm should give a 1 on q_0
 </span><span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
@@ -226,9 +226,9 @@ q_1: |0&gt;┤ X ├┤ H ├─░─┤ X ├─░─┤ H ├─╫─
 <span class="n">visualization</span><span class="o">.</span><span class="n">plot_histogram</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p><img src="/assets/images/output_11_0.png" alt="png" /></p>
+<p><img src="/assets/images/dj_output_11_0.png" alt="png" /></p>
 
-<h3 id="examples-of-u_f-u_f_2">Examples of $U_f$: $U_{f_2}$</h3>
+<h3 id="examples-of-u_f-u_f_2">Examples of <script type="math/tex">U_f</script>: <script type="math/tex">U_{f_2}</script></h3>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Balanced U_f. Deutsch's algorithm should give a 1 on q_0
 </span><span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
@@ -258,9 +258,9 @@ q_1: |0&gt;┤ X ├┤ H ├─░─┤ X ├┤ X ├─░─┤ H ├─╫
 <span class="n">visualization</span><span class="o">.</span><span class="n">plot_histogram</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p><img src="/assets/images/output_14_0.png" alt="png" /></p>
+<p><img src="/assets/images/dj_output_14_0.png" alt="png" /></p>
 
-<h3 id="examples-of-u_f-u_f_3">Examples of $U_f$: $U_{f_3}$</h3>
+<h3 id="examples-of-u_f-u_f_3">Examples of <script type="math/tex">U_f</script>: <script type="math/tex">U_{f_3}</script></h3>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Constant U_f. Deutsch's algorithm should give a 0 on q_0
 </span><span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
@@ -289,10 +289,10 @@ q_1: |0&gt;┤ X ├┤ H ├─░─┤ X ├─░─┤ H ├─╫─
 <span class="n">visualization</span><span class="o">.</span><span class="n">plot_histogram</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p><img src="/assets/images/output_17_0.png" alt="png" /></p>
+<p><img src="/assets/images/dj_output_17_0.png" alt="png" /></p>
 
-<h3 id="examples-of-u_f-u_f_1-on-a-real-quantum-computer">Examples of $U_f$: $U_{f_1}$ on a real quantum computer</h3>
-<p>Of course, we should also runs these on a <strong>real quantum computer</strong>. I’ll pick $U_{f_1}$ which is a balanced function. You will need to have an <a href="https://quantum-computing.ibm.com">IBM Q Experience account</a> to do this.</p>
+<h3 id="examples-of---u_f-u_f_1-on-a-real-quantum-computer">Examples of   <script type="math/tex">U_f</script>: <script type="math/tex">U_{f_1}</script> on a real quantum computer</h3>
+<p>Of course, we should also runs these on a <strong>real quantum computer</strong>. I’ll pick <script type="math/tex">U_{f_1}</script> which is a balanced function. You will need to have an <a href="https://quantum-computing.ibm.com">IBM Q Experience account</a> to do this.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Filter backends to find the least busy 5 qubit quantum computer and check current "pending_jobs"
 </span><span class="kn">from</span> <span class="nn">qiskit.providers.ibmq</span> <span class="kn">import</span> <span class="n">least_busy</span>
@@ -337,14 +337,14 @@ q_1: |0&gt;┤ X ├┤ H ├─░─┤ X ├─░─┤ H ├─╫─
 <span class="n">visualization</span><span class="o">.</span><span class="n">plot_histogram</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p><img src="/assets/images/output_21_0.png" alt="png" /></p>
+<p><img src="/assets/images/dj_output_21_0.png" alt="png" /></p>
 
-<p>Deutsch’s algorithm <strong>guarantees</strong> q_0 will be 1 at the output for a balanced $U_f$, but that’s not what we just measured! There’s ~30% of a 0 state. What happened?? Well, the quantum computer isn’t perfectly quantum all the time: electrical noise in executing the gates, the temperature of the superconducting chips, vibrations, etc. etc. all work toward making these qubits no longer “quantum” and reduces it’s efficiency at computing quantum algorithms.</p>
+<p>Deutsch’s algorithm <strong>guarantees</strong> q_0 will be 1 at the output for a balanced <script type="math/tex">U_f</script>, but that’s not what we just measured! There’s ~30% of a 0 state. What happened?? Well, the quantum computer isn’t perfectly quantum all the time: electrical noise in executing the gates, the temperature of the superconducting chips, vibrations, etc. etc. all work toward making these qubits no longer “quantum” and reduces it’s efficiency at computing quantum algorithms.</p>
 
 <h2 id="deutsch-jozsa-problem-and-algorithm">Deutsch-Jozsa Problem (and algorithm)</h2>
-<p>The extension from Deutsch to Deutsch-Jozsa is straight forward. We simply increase the number of input qubits from 1 to $n$ like this…
-<img src="Deutsch-Jozsa_algo.png" alt="png" />
-The reset of the process is the same. Measuring the $n$ input qubits at the very end will give all 0’s <strong>only</strong> for a constant function. If we measure <strong>any other</strong> state, we know $f(x)$ is a balanced function. Try and make you’re own balanced or constant $U_f$ and see how it goes. Here’s my attempt using a balanced function of just one CNOT gate. Remember, for a balanced function, the measured state of the input qubits should give a state OTHER than 0000.</p>
+<p>The extension from Deutsch to Deutsch-Jozsa is straight forward. We simply increase the number of input qubits from 1 to <script type="math/tex">n</script> like this…
+<img src="/assets/images/Deutsch-Jozsa_algo.png" alt="png" />
+The reset of the process is the same. Measuring the <script type="math/tex">n</script> input qubits at the very end will give all 0’s <strong>only</strong> for a constant function. If we measure <strong>any other</strong> state, we know <script type="math/tex">f(x)</script> is a balanced function. Try and make you’re own balanced or constant <script type="math/tex">U_f</script> and see how it goes. Here’s my attempt using a balanced function of just one CNOT gate. Remember, for a balanced function, the measured state of the input qubits should give a state OTHER than 0000.</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
 <span class="n">circuit</span><span class="o">.</span><span class="n">x</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
@@ -387,7 +387,7 @@ q_4: |0&gt;┤ X ├┤ H ├─░─┤ X ├─░─┤ H ├─╫──╫
 <span class="n">visualization</span><span class="o">.</span><span class="n">plot_histogram</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p><img src="/assets/images/output_26_0.png" alt="png" /></p>
+<p><img src="/assets/images/dj_output_26_0.png" alt="png" /></p>
 
 <h3 id="deutsh-jozsa-real-quantum-computer">Deutsh-Jozsa real quantum computer</h3>
 
@@ -396,10 +396,10 @@ q_4: |0&gt;┤ X ├┤ H ├─░─┤ X ├─░─┤ H ├─╫──╫
 <span class="n">visualization</span><span class="o">.</span><span class="n">plot_histogram</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p><img src="/assets/images/output_28_0.png" alt="png" /></p>
+<p><img src="/assets/images/dj_output_28_0.png" alt="png" /></p>
 
 <h2 id="quantum-speedup">Quantum Speedup?</h2>
-<p>Deutsch-Jozsa was the first quantum algorithm that showed exponentially faster computation than a classical computer. For $n$ input bits, a classical computer would need, in a worst case scenario, roughly $2^{n-1}+1$ runs while a quantum computer <strong>needs only 1</strong>! Let’s tabulate this to get a little prospective. Let’s assume one run for both classical and quantum computers takes 10 nanoseconds (ns).</p>
+<p>Deutsch-Jozsa was the first quantum algorithm that showed exponentially faster computation than a classical computer. For <script type="math/tex">n</script> input bits, a classical computer would need, in a worst case scenario, roughly <script type="math/tex">2^{n-1}+1</script> runs while a quantum computer <strong>needs only 1</strong>! Let’s tabulate this to get a little prospective. Let’s assume one run for both classical and quantum computers takes 10 nanoseconds (ns).</p>
 
 <script type="math/tex; mode=display">% <![CDATA[
 \begin{array}{c|c|c}
@@ -410,7 +410,7 @@ q_4: |0&gt;┤ X ├┤ H ├─░─┤ X ├─░─┤ H ├─╫──╫
   n=90 & 19.6 \gt \text{ billion years}& 1 \text{ ns}\\
 \end{array} %]]></script>
 
-<p>For context, $19.6$ <strong>BILLION YEARS</strong> is longer than the universe has been around. THAT’s what an exponential speedup means. THAT’s why people are so hot on making quantum computers work. (Though to solve other problem’s than the Deutsch Problem.)</p>
+<p>For context, <script type="math/tex">19.6</script> <strong>BILLION YEARS</strong> is longer than the universe has been around. THAT’s what an exponential speedup means. THAT’s why people are so hot on making quantum computers work. (Though to solve other problem’s than the Deutsch Problem.)</p>
 
   </div><a class="u-url" href="/2020/02/27/Deutsch-Jozsa-Algorithm.html" hidden></a>
 </article>
